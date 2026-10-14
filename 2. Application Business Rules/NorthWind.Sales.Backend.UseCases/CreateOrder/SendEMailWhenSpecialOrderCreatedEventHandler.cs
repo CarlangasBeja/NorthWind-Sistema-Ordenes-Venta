@@ -1,8 +1,16 @@
 using NorthWind.Entities.Interfaces;
 using NorthWind.Events.Entities.Interfaces;
-using NorthWind.Sales.Backend.UseCases.Resources;
+
 namespace NorthWind.Sales.Backend.UseCases.CreateOrder;
-internal class SendEMailWhenSpecialOrderCreatedEventHandler(IMailService mailService):IDomainEventHandler<SpecialOrderCreatedEvent>
+
+// Maneja el evento de dominio sin conocer el proveedor de correo ni el Gmail destino.
+internal sealed class SendEMailWhenSpecialOrderCreatedEventHandler(
+    IMailService mailService) : IDomainEventHandler<SpecialOrderCreatedEvent>
 {
-    public Task Handle(SpecialOrderCreatedEvent createdOrder)=>mailService.SendMailToAdministrator(CreateOrderMessages.SendEmailSubject,string.Format(CreateOrderMessages.SendEmailBodyTemplate,createdOrder.OrderId,createdOrder.ProductsCount));
+    public Task Handle(SpecialOrderCreatedEvent createdOrder)
+    {
+        var htmlBody = SpecialOrderEmailTemplate.Build(createdOrder);
+        var subject = $"NorthWind | Nueva orden especial #{createdOrder.OrderId:D6} - {createdOrder.ProductsCount} productos";
+        return mailService.SendMailToAdministrator(subject, htmlBody);
+    }
 }

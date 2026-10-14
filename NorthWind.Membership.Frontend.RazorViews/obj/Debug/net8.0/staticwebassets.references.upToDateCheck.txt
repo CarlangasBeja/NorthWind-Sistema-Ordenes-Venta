@@ -1,1 +1,0 @@
-C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\3. Interface Adapters\Views\NorthWind.RazorComponents\obj\Debug\net8.0\staticwebassets.build.json

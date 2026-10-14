@@ -37,6 +37,19 @@ internal class NorthWindSalesCommandsDataContext(
             .Select(product => (decimal?)product.UnitPrice)
             .FirstOrDefaultAsync();
 
+    public Task<bool> CustomerExistsAsync(string customerId) =>
+        Customers.AnyAsync(customer => customer.Id == customerId);
+
+    public async Task AddCustomerAsync(NorthWind.Sales.Backend.Repositories.Entities.Customer customer) =>
+        await Customers.AddAsync(customer);
+
+    public async Task<bool> UpdateCustomerBalanceAsync(string customerId, decimal balance)
+    {
+        var affected = await Database.ExecuteSqlInterpolatedAsync($@"
+            UPDATE Customers SET CurrentBalance = {balance} WHERE Id = {customerId};");
+        return affected == 1;
+    }
+
     public async Task SaveChangesAsync() =>
         await GuardDBContext.AgainstSaveChangesErrorAsync(this);
 }

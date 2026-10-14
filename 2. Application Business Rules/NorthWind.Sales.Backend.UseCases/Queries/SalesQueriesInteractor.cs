@@ -10,8 +10,8 @@ internal sealed class SalesQueriesInteractor(IQueriesRepository repository) : IS
     public Task<PagedResultDto<CustomerSearchItemDto>> SearchCustomers(string? search, string? field, int page, int pageSize) =>
         repository.SearchCustomers(search, NormalizeField(field), NormalizePage(page), NormalizePageSize(pageSize));
 
-    public Task<PagedResultDto<ProductSearchItemDto>> SearchProducts(string? search, string? field, int page, int pageSize) =>
-        repository.SearchProducts(search, NormalizeField(field), NormalizePage(page), NormalizePageSize(pageSize));
+    public Task<PagedResultDto<ProductSearchItemDto>> SearchProducts(string? search, string? field, int page, int pageSize, bool includeOutOfStock = false) =>
+        repository.SearchProducts(search, NormalizeField(field), NormalizePage(page), NormalizePageSize(pageSize), includeOutOfStock);
 
     public Task<PagedResultDto<OrderSearchItemDto>> SearchOrders(string? search, string? field, int page, int pageSize) =>
         repository.SearchOrders(search, NormalizeField(field), NormalizePage(page), NormalizePageSize(pageSize));

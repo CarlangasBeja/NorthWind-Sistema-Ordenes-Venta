@@ -10,4 +10,7 @@ public interface INorthWindSalesCommandsDataContext
     Task<bool> DecreaseProductStockAsync(int productId, short quantity);
     Task<decimal?> GetProductUnitPriceAsync(int productId);
     Task SaveChangesAsync();
+    Task<bool> CustomerExistsAsync(string customerId);
+    Task AddCustomerAsync(Customer customer);
+    Task<bool> UpdateCustomerBalanceAsync(string customerId, decimal balance);
 }

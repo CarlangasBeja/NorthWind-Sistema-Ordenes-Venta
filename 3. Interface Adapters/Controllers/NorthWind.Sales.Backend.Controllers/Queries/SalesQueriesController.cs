@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Http;
+using NorthWind.Sales.Backend.BusinessObjects.Interfaces.Customers;
+using NorthWind.Sales.Entities.Dtos.Customers;
 using NorthWind.Sales.Backend.BusinessObjects.Interfaces.Queries;
 using NorthWind.Sales.Entities.ValueObjects;
 
@@ -11,6 +13,8 @@ public static class SalesQueriesController
         app.MapGet(Endpoints.SearchCustomers, SearchCustomers).RequireAuthorization();
         app.MapGet(Endpoints.SearchProducts, SearchProducts).RequireAuthorization();
         app.MapGet(Endpoints.SearchOrders, SearchOrders).RequireAuthorization();
+        app.MapPost(Endpoints.CreateCustomer, CreateCustomer).RequireAuthorization();
+        app.MapPut(Endpoints.UpdateCustomerBalance, UpdateCustomerBalance).RequireAuthorization();
         app.MapGet(Endpoints.GetOrderInvoice, GetOrderInvoice).RequireAuthorization();
         app.MapGet(Endpoints.GetOrderPdf, GetOrderPdf).RequireAuthorization();
         return app;
@@ -29,8 +33,26 @@ public static class SalesQueriesController
         string? field,
         int page,
         int pageSize,
-        ISalesQueriesInputPort inputPort) =>
-        Results.Ok(await inputPort.SearchProducts(search, field, page, pageSize));
+        ISalesQueriesInputPort inputPort,
+        bool? includeOutOfStock) =>
+        Results.Ok(await inputPort.SearchProducts(search, field, page, pageSize, includeOutOfStock == true));
+
+    private static async Task<IResult> CreateCustomer(
+        CustomerWriteDto customer,
+        ICustomerManagementInputPort inputPort)
+    {
+        var result = await inputPort.Create(customer);
+        return result.Success ? Results.Created($"/api/customers/{customer.Id}", result) : Results.BadRequest(result);
+    }
+
+    private static async Task<IResult> UpdateCustomerBalance(
+        string customerId,
+        CustomerBalanceDto balance,
+        ICustomerManagementInputPort inputPort)
+    {
+        var result = await inputPort.UpdateBalance(customerId, balance);
+        return result.Success ? Results.Ok(result) : Results.BadRequest(result);
+    }
 
     private static async Task<IResult> SearchOrders(
         string? search,

@@ -16,6 +16,21 @@ internal sealed class QueriesRepository(INorthWindSalesQueriesDataContext contex
         return await context.FirstOrDefaultAync(query);
     }
 
+    public async Task<CustomerSearchItemDto?> GetCustomerById(string customerId)
+    {
+        var query = context.Customers.Where(c => c.Id == customerId)
+            .Select(c => new CustomerSearchItemDto(c.Id, c.Name, c.CurrentBalance));
+        return await context.FirstOrDefaultAync(query);
+    }
+
+    public async Task<IReadOnlyList<ProductSearchItemDto>> GetProductsByIds(IEnumerable<int> productIds)
+    {
+        var ids = productIds.Distinct().ToArray();
+        var query = context.Products.Where(p => ids.Contains(p.Id))
+            .Select(p => new ProductSearchItemDto(p.Id, p.Name, p.UnitPrice, p.UnitsInStock));
+        return (await context.ToListAsync(query)).ToArray();
+    }
+
     public async Task<IEnumerable<ProductUnitsInStock>> GetProductsUnitsInStock(IEnumerable<int> productIds)
     {
         var ids = productIds.Distinct().ToList();
@@ -54,13 +69,14 @@ internal sealed class QueriesRepository(INorthWindSalesQueriesDataContext contex
         return new PagedResultDto<CustomerSearchItemDto>(items, page, pageSize, total);
     }
 
-    public async Task<PagedResultDto<ProductSearchItemDto>> SearchProducts(string? search, string? field, int page, int pageSize)
+    public async Task<PagedResultDto<ProductSearchItemDto>> SearchProducts(string? search, string? field, int page, int pageSize, bool includeOutOfStock = false)
     {
         var term = (search ?? string.Empty).Trim();
         var hasNumericTerm = int.TryParse(term, out var productId);
 
-        var query = context.Products
-            .Where(product => product.UnitsInStock > 0);
+        var query = includeOutOfStock
+            ? context.Products.AsQueryable()
+            : context.Products.Where(product => product.UnitsInStock > 0);
 
         if (!string.IsNullOrWhiteSpace(term))
         {

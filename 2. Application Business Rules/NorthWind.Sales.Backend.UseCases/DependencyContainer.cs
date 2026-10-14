@@ -1,4 +1,6 @@
 using NorthWind.Events.Entities.Interfaces;
+using NorthWind.Sales.Backend.BusinessObjects.Interfaces.Customers;
+using NorthWind.Sales.Backend.UseCases.Customers;
 using NorthWind.Sales.Backend.BusinessObjects.Interfaces.CreateOrder;
 using NorthWind.Sales.Backend.BusinessObjects.Interfaces.Queries;
 using NorthWind.Sales.Backend.UseCases.CreateOrder;
@@ -11,6 +13,7 @@ public static class DependencyContainer
     {
         services.AddScoped<ICreateOrderInputPort, CreateOrderInteractor>();
         services.AddScoped<ISalesQueriesInputPort, SalesQueriesInteractor>();
+        services.AddScoped<ICustomerManagementInputPort, CustomerManagementInteractor>();
         services.AddModelValidator<CreateOrderDto,CreateOrderCustomerValidator>();
         services.AddModelValidator<CreateOrderDto,CreateOrderProductValidator>();
         services.AddScoped<IDomainEventHandler<SpecialOrderCreatedEvent>,SendEMailWhenSpecialOrderCreatedEventHandler>();

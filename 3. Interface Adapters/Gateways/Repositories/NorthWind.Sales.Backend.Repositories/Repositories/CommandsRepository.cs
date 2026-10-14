@@ -39,6 +39,17 @@ internal class CommandsRepository(INorthWindSalesCommandsDataContext context) : 
         await context.AddOrderDetailsAsync(details);
     }
 
+    public Task<bool> CustomerExists(string id) => context.CustomerExistsAsync(id);
+
+    public Task CreateCustomer(string id, string name, decimal balance) =>
+        context.AddCustomerAsync(new NorthWind.Sales.Backend.Repositories.Entities.Customer
+        {
+            Id = id, Name = name, CurrentBalance = balance
+        });
+
+    public Task<bool> UpdateCustomerBalance(string id, decimal balance) =>
+        context.UpdateCustomerBalanceAsync(id, balance);
+
     public async Task SaveChanges() =>
         await context.SaveChangesAsync();
 }

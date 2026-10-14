@@ -1,0 +1,30 @@
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.rsuser
+*.userosscache
+*.sln.docstates
+
+# Archivos generados por .NET
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+
+# Credenciales y configuracion privada
+.env
+.env.*
+secrets.json
+appsettings.Development.json
+*.pfx
+*.p12
+
+# Archivos temporales
+*.tmp
+*.log
+Thumbs.db
+
+# Copia anidada del proyecto
+/NorthWind/

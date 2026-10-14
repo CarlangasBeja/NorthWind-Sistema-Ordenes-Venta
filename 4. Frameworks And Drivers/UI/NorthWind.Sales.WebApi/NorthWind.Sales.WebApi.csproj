@@ -3,6 +3,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UserSecretsId>NorthWind.Sales.WebApi-Development</UserSecretsId>
 </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\IoC\NorthWind.Sales.Backend.IoC\NorthWind.Sales.Backend.IoC.csproj" />

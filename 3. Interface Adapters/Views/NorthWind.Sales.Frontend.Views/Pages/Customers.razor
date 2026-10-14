@@ -1,0 +1,312 @@
+@page "/customers"
+@attribute [Authorize]
+@inject ISalesQueriesGateway Gateway
+
+<PageTitle>Clientes | NorthWind</PageTitle>
+
+<div class="nw-page-heading">
+    <div>
+        <span class="nw-kicker">CATÁLOGO DE CLIENTES</span>
+        <h1>Clientes y saldos pendientes</h1>
+        <p>Consulte clientes, registre nuevos contactos y controle sus saldos desde ventanas independientes.</p>
+    </div>
+    <div class="nw-client-heading-actions">
+        <button type="button" class="btn btn-primary nw-btn-icon" @onclick="OpenCreateModal" disabled="@(Busy || Saving)">
+            <span aria-hidden="true">＋</span> Agregar cliente
+        </button>
+        <a class="btn btn-outline-secondary" href="/createorder">Ir a ventas →</a>
+    </div>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(SuccessMessage))
+{
+    <div class="nw-feedback nw-feedback-success mb-4" role="status"><div class="nw-feedback-icon">✓</div><div class="nw-feedback-body"><strong>Operación exitosa</strong><p>@SuccessMessage</p></div><button class="nw-feedback-close" @onclick="() => SuccessMessage = string.Empty" aria-label="Cerrar mensaje">×</button></div>
+}
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <div class="nw-feedback nw-feedback-danger mb-4" role="alert"><div class="nw-feedback-icon">!</div><div class="nw-feedback-body"><strong>Revise la información</strong><p>@ErrorMessage</p></div><button class="nw-feedback-close" @onclick="() => ErrorMessage = string.Empty" aria-label="Cerrar mensaje">×</button></div>
+}
+
+<section class="nw-card mb-4">
+    <div class="nw-card-header nw-card-header-actions">
+        <div><span class="nw-step">01</span><div><h2>Buscar clientes</h2><p>Localice clientes por su código o nombre y consulte el saldo de cada uno.</p></div></div>
+        <span class="nw-status-pill nw-status-neutral">@(Result?.TotalItems ?? 0) clientes encontrados</span>
+    </div>
+    <div class="nw-catalog-toolbar">
+        <div class="nw-catalog-filters">
+            <label class="form-label" for="clientField">Buscar por</label>
+            <select id="clientField" class="form-select" @bind="SearchField">
+                <option value="all">Código o nombre</option><option value="code">Solo código</option><option value="name">Solo nombre</option>
+            </select>
+        </div>
+        <div class="nw-catalog-search">
+            <label class="form-label" for="clientSearch">Texto de búsqueda</label>
+            <input id="clientSearch" class="form-control" placeholder="Ej.: EC001 o María" @bind="SearchText" @bind:event="oninput" @onkeydown="OnSearchKeyDown" />
+        </div>
+        <button type="button" class="btn btn-primary" disabled="@Busy" @onclick="Search">@(Busy ? "Buscando..." : "Buscar clientes")</button>
+        <button type="button" class="btn btn-outline-secondary" disabled="@Busy" @onclick="Clear">Limpiar</button>
+    </div>
+    @if (Busy)
+    {
+        <div class="nw-loading-block"><span class="nw-spinner"></span><strong>Cargando clientes...</strong></div>
+    }
+    else if (Result is null || Result.Items.Count == 0)
+    {
+        <div class="nw-empty-block"><strong>No hay clientes para este filtro</strong><span>Compruebe el criterio de búsqueda o registre un cliente nuevo.</span></div>
+    }
+    else
+    {
+        <div class="table-responsive nw-table-shell">
+            <table class="table table-hover align-middle nw-data-table mb-0">
+                <thead><tr><th>Código</th><th>Nombre del cliente</th><th class="text-end">Saldo pendiente</th><th>Estado para comprar</th><th class="text-end">Gestión</th></tr></thead>
+                <tbody>
+                    @foreach (var customer in Result.Items)
+                    {
+                        <tr>
+                            <td data-label="Código"><span class="nw-code-chip">@customer.Id</span></td>
+                            <td data-label="Nombre"><strong>@customer.Name</strong></td>
+                            <td data-label="Deuda" class="text-end"><strong>@Money(customer.CurrentBalance)</strong></td>
+                            <td data-label="Estado">
+                                @if (customer.CurrentBalance > 0)
+                                {
+                                    <span class="nw-status-pill nw-status-warning">Con deuda · Compra bloqueada</span>
+                                }
+                                else
+                                {
+                                    <span class="nw-status-pill nw-status-success">Sin deuda · Puede comprar</span>
+                                }
+                            </td>
+                            <td data-label="Gestión" class="text-end"><button class="btn btn-sm btn-outline-primary" type="button" @onclick="() => BeginEdit(customer)">Modificar saldo</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="nw-pagination">
+            <button type="button" class="btn btn-outline-secondary" disabled="@(Busy || Result.Page <= 1)" @onclick="Previous">← Anterior</button>
+            <span>Página <strong>@Result.Page</strong> de <strong>@Math.Max(1, Result.TotalPages)</strong></span>
+            <button type="button" class="btn btn-outline-secondary" disabled="@(Busy || Result.Page >= Result.TotalPages)" @onclick="Next">Siguiente →</button>
+        </div>
+    }
+</section>
+
+@* Ventana de actualización: no desplaza la tabla ni crea un formulario debajo. *@
+@if (ShowEditModal)
+{
+    <div class="nw-modal-backdrop" role="presentation">
+        <section class="nw-modal nw-client-modal" role="dialog" aria-modal="true" aria-labelledby="clientEditTitle">
+            <header class="nw-modal-header">
+                <div>
+                    <span class="nw-kicker">GESTIÓN DE SALDOS</span>
+                    <h2 id="clientEditTitle">Modificar saldo pendiente</h2>
+                    <p>Ajuste la deuda actual del cliente seleccionado.</p>
+                </div>
+                <button type="button" class="nw-icon-button" @onclick="CancelEdit" disabled="@Saving" aria-label="Cerrar ventana">×</button>
+            </header>
+            <div class="nw-modal-body nw-client-modal-body">
+                <div class="nw-client-selected">
+                    <span class="nw-code-chip">@EditCode</span>
+                    <div><strong>@EditName</strong><small>Cliente seleccionado</small></div>
+                </div>
+                @if (!string.IsNullOrWhiteSpace(ModalError))
+                {
+                    <div class="nw-client-modal-error" role="alert">@ModalError</div>
+                }
+                <label class="form-label" for="editBalance">Deuda pendiente (USD)</label>
+                <input id="editBalance" class="form-control" type="number" min="0" max="999999.99" step="0.01" @bind="EditBalance" disabled="@Saving" />
+                <p class="nw-client-form-help">Ingrese <strong>0,00</strong> si el cliente pagó toda su deuda. Un saldo mayor que cero impedirá nuevas órdenes.</p>
+                <div class="nw-client-balance-preview">
+                    <span>Estado después de guardar</span>
+                    <strong class="@(EditBalance > 0 ? "nw-client-text-warning" : "nw-client-text-success")">
+                        @(EditBalance > 0 ? "Con deuda · Compra bloqueada" : "Sin deuda · Puede comprar")
+                    </strong>
+                </div>
+            </div>
+            <footer class="nw-modal-footer">
+                <button type="button" class="btn btn-outline-secondary" @onclick="CancelEdit" disabled="@Saving">Cancelar</button>
+                <button type="button" class="btn btn-primary" @onclick="SaveBalance" disabled="@Saving">
+                    @(Saving ? "Guardando..." : "Guardar saldo")
+                </button>
+            </footer>
+        </section>
+    </div>
+}
+
+@* Ventana de alta de clientes: el botón del encabezado abre este formulario. *@
+@if (ShowCreateModal)
+{
+    <div class="nw-modal-backdrop" role="presentation">
+        <section class="nw-modal nw-client-modal" role="dialog" aria-modal="true" aria-labelledby="clientCreateTitle">
+            <header class="nw-modal-header">
+                <div>
+                    <span class="nw-kicker">NUEVO CLIENTE</span>
+                    <h2 id="clientCreateTitle">Registrar cliente</h2>
+                    <p>Complete los campos para guardar el nuevo cliente en NorthWindDB.</p>
+                </div>
+                <button type="button" class="nw-icon-button" @onclick="CancelCreate" disabled="@Saving" aria-label="Cerrar ventana">×</button>
+            </header>
+            <div class="nw-modal-body nw-client-modal-body">
+                @if (!string.IsNullOrWhiteSpace(ModalError))
+                {
+                    <div class="nw-client-modal-error" role="alert">@ModalError</div>
+                }
+                <div class="nw-client-input-grid">
+                    <div>
+                        <label class="form-label" for="newCode">Código del cliente <span aria-hidden="true">*</span></label>
+                        <input id="newCode" class="form-control" maxlength="5" placeholder="Ej.: EC011" @bind="NewCode" disabled="@Saving" autocomplete="off" />
+                        <small class="form-text">Exactamente 5 letras o números; debe ser único.</small>
+                    </div>
+                    <div>
+                        <label class="form-label" for="newName">Nombre completo <span aria-hidden="true">*</span></label>
+                        <input id="newName" class="form-control" maxlength="60" placeholder="Ej.: María Fernanda López" @bind="NewName" disabled="@Saving" autocomplete="off" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="newBalance">Saldo pendiente (USD)</label>
+                        <input id="newBalance" class="form-control" type="number" min="0" max="999999.99" step="0.01" @bind="NewBalance" disabled="@Saving" />
+                        <small class="form-text">Utilice 0 para un cliente sin deuda.</small>
+                    </div>
+                </div>
+                <div class="nw-client-modal-tip">El saldo inicial se registra manualmente; registrar un cliente no genera una orden de venta.</div>
+            </div>
+            <footer class="nw-modal-footer">
+                <button type="button" class="btn btn-outline-secondary" @onclick="CancelCreate" disabled="@Saving">Cancelar</button>
+                <button type="button" class="btn btn-primary" @onclick="SaveCustomer" disabled="@Saving">
+                    @(Saving ? "Registrando..." : "Guardar cliente")
+                </button>
+            </footer>
+        </section>
+    </div>
+}
+
+@code {
+    private const int PageSize = 10;
+    private string SearchField = "all";
+    private string SearchText = string.Empty;
+    private string SuccessMessage = string.Empty;
+    private string ErrorMessage = string.Empty;
+    private bool Busy;
+    private bool Saving;
+    private bool ShowCreateModal;
+    private bool ShowEditModal;
+    private string ModalError = string.Empty;
+    private PagedResultDto<CustomerSearchItemDto>? Result;
+    private string NewCode = string.Empty;
+    private string NewName = string.Empty;
+    private decimal NewBalance;
+    private string EditCode = string.Empty;
+    private string EditName = string.Empty;
+    private decimal EditBalance;
+
+    private static string Money(decimal value) => $"$ {value:N2}";
+    protected override async Task OnInitializedAsync() => await Load(1);
+    private Task Search() => Load(1);
+    private async Task Clear() { SearchText = string.Empty; SearchField = "all"; await Load(1); }
+    private async Task OnSearchKeyDown(KeyboardEventArgs args) { if (args.Key == "Enter" && !Busy) await Search(); }
+    private Task Previous() => Load(Math.Max(1, (Result?.Page ?? 1) - 1));
+    private Task Next() => Load((Result?.Page ?? 0) + 1);
+    private async Task Load(int page)
+    {
+        Busy = true; ErrorMessage = string.Empty;
+        try { Result = await Gateway.SearchCustomersAsync(SearchText.Trim(), SearchField, page, PageSize); }
+        catch (Exception e) { ErrorMessage = ErrorText(e); }
+        finally { Busy = false; }
+    }
+    private void OpenCreateModal()
+    {
+        if (Saving) return;
+        ShowEditModal = false;
+        ShowCreateModal = true;
+        NewCode = string.Empty;
+        NewName = string.Empty;
+        NewBalance = 0;
+        ModalError = string.Empty;
+        ErrorMessage = string.Empty;
+    }
+    private void CancelCreate()
+    {
+        if (Saving) return;
+        ShowCreateModal = false;
+        ModalError = string.Empty;
+    }
+    private void BeginEdit(CustomerSearchItemDto customer)
+    {
+        if (Saving) return;
+        ShowCreateModal = false;
+        ShowEditModal = true;
+        EditCode = customer.Id;
+        EditName = customer.Name;
+        EditBalance = customer.CurrentBalance;
+        ModalError = string.Empty;
+        ErrorMessage = string.Empty;
+    }
+    private void CancelEdit()
+    {
+        if (Saving) return;
+        ShowEditModal = false;
+        EditCode = string.Empty;
+        EditName = string.Empty;
+        ModalError = string.Empty;
+    }
+    private async Task SaveBalance()
+    {
+        if (Saving || !ShowEditModal) return;
+        if (EditBalance < 0 || EditBalance > 999999.99m)
+        {
+            ModalError = "La deuda debe estar entre $0,00 y $999.999,99.";
+            return;
+        }
+        Saving = true;
+        ModalError = string.Empty;
+        try
+        {
+            var result = await Gateway.UpdateCustomerBalanceAsync(EditCode, EditBalance);
+            if (!result.Success)
+            {
+                ModalError = result.Message;
+                return;
+            }
+            SuccessMessage = result.Message;
+            ShowEditModal = false;
+            EditCode = string.Empty;
+            EditName = string.Empty;
+            await Load(Result?.Page ?? 1);
+        }
+        catch (Exception e) { ModalError = ErrorText(e); }
+        finally { Saving = false; }
+    }
+    private async Task SaveCustomer()
+    {
+        if (Saving || !ShowCreateModal) return;
+        var id = (NewCode ?? string.Empty).Trim().ToUpperInvariant();
+        var name = (NewName ?? string.Empty).Trim();
+        if (id.Length != 5 || !id.All(char.IsLetterOrDigit) || name.Length is < 3 or > 60 || NewBalance < 0 || NewBalance > 999999.99m)
+        {
+            ModalError = "Ingrese un código único de 5 letras o números, un nombre de 3 a 60 caracteres y una deuda válida.";
+            return;
+        }
+        Saving = true;
+        ModalError = string.Empty;
+        try
+        {
+            var result = await Gateway.CreateCustomerAsync(new NorthWind.Sales.Entities.Dtos.Customers.CustomerWriteDto(id, name, NewBalance));
+            if (!result.Success)
+            {
+                ModalError = result.Message;
+                return;
+            }
+            SuccessMessage = result.Message;
+            ShowCreateModal = false;
+            NewCode = string.Empty;
+            NewName = string.Empty;
+            NewBalance = 0;
+            SearchText = id;
+            SearchField = "code";
+            await Load(1);
+        }
+        catch (Exception e) { ModalError = ErrorText(e); }
+        finally { Saving = false; }
+    }
+    private static string ErrorText(Exception exception) => exception is HttpRequestException e && e.StatusCode == System.Net.HttpStatusCode.Unauthorized
+        ? "Inicie sesión nuevamente para gestionar clientes."
+        : exception.Message;
+}

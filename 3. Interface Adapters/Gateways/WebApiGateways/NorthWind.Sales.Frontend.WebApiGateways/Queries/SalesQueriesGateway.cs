@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using NorthWind.Sales.Entities.Dtos.Customers;
 using NorthWind.Sales.Entities.Dtos.Queries;
 using NorthWind.Sales.Entities.ValueObjects;
 using NorthWind.Sales.Frontend.BusinessObjects.Interfaces;
@@ -12,9 +13,30 @@ internal sealed class SalesQueriesGateway(HttpClient client) : ISalesQueriesGate
         GetRequiredAsync<PagedResultDto<CustomerSearchItemDto>>(
             BuildSearchUri(Endpoints.SearchCustomers, search, field, page, pageSize));
 
-    public Task<PagedResultDto<ProductSearchItemDto>> SearchProductsAsync(string? search, string? field, int page, int pageSize) =>
+    public Task<PagedResultDto<ProductSearchItemDto>> SearchProductsAsync(string? search, string? field, int page, int pageSize, bool includeOutOfStock = false) =>
         GetRequiredAsync<PagedResultDto<ProductSearchItemDto>>(
-            BuildSearchUri(Endpoints.SearchProducts, search, field, page, pageSize));
+            BuildSearchUri(Endpoints.SearchProducts, search, field, page, pageSize) +
+                (includeOutOfStock ? "&includeOutOfStock=true" : string.Empty));
+
+    public async Task<CustomerOperationResult> CreateCustomerAsync(CustomerWriteDto customer)
+    {
+        var response = await client.PostAsJsonAsync(Endpoints.CreateCustomer, customer);
+        return await ReadCustomerOperationAsync(response);
+    }
+
+    public async Task<CustomerOperationResult> UpdateCustomerBalanceAsync(string id, decimal balance)
+    {
+        var response = await client.PutAsJsonAsync(
+            $"/api/customers/{Uri.EscapeDataString(id)}/balance", new CustomerBalanceDto(balance));
+        return await ReadCustomerOperationAsync(response);
+    }
+
+    private static async Task<CustomerOperationResult> ReadCustomerOperationAsync(HttpResponseMessage response)
+    {
+        var result = await response.Content.ReadFromJsonAsync<CustomerOperationResult>();
+        response.EnsureSuccessStatusCode();
+        return result ?? throw new HttpRequestException("El servidor no devolvió una confirmación.");
+    }
 
     public Task<PagedResultDto<OrderSearchItemDto>> SearchOrdersAsync(string? search, string? field, int page, int pageSize) =>
         GetRequiredAsync<PagedResultDto<OrderSearchItemDto>>(
