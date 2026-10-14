@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>NorthWind.Membership.Backend.Core</id>
+    <version>1.0.0</version>
+    <authors>NorthWind.Membership.Backend.Core</authors>
+    <description>Package Description</description>
+    <repository type="git" />
+    <dependencies>
+      <group targetFramework="net8.0">
+        <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="8.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Options" version="8.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.IdentityModel.JsonWebTokens" version="7.4.0" exclude="Build,Analyzers" />
+        <dependency id="NorthWind.Membership.Entities" version="1.0.0" exclude="Build,Analyzers" />
+        <dependency id="NorthWind.Result.Entities" version="1.0.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework="net8.0">
+        <frameworkReference name="Microsoft.AspNetCore.App" />
+      </group>
+    </frameworkReferences>
+  </metadata>
+  <files>
+    <file src="C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\NorthWind.Membership.Backend.Core\bin\Release\net8.0\NorthWind.Membership.Backend.Core.dll" target="lib\net8.0\NorthWind.Membership.Backend.Core.dll" />
+  </files>
+</package>

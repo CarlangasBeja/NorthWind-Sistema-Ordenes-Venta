@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "eu3y4y4NAP4=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\NorthWind.Membership.Entities\\NorthWind.Membership.Entities.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ASUS VIVOBOOK\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\ASUS VIVOBOOK\\.nuget\\packages\\northwind.validation.entities\\1.0.0\\northwind.validation.entities.1.0.0.nupkg.sha512",
+    "C:\\Users\\ASUS VIVOBOOK\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.31\\microsoft.windowsdesktop.app.ref.8.0.31.nupkg.sha512",
+    "C:\\Users\\ASUS VIVOBOOK\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.31\\microsoft.netcore.app.ref.8.0.31.nupkg.sha512",
+    "C:\\Users\\ASUS VIVOBOOK\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.31\\microsoft.aspnetcore.app.ref.8.0.31.nupkg.sha512"
+  ],
+  "logs": []
+}

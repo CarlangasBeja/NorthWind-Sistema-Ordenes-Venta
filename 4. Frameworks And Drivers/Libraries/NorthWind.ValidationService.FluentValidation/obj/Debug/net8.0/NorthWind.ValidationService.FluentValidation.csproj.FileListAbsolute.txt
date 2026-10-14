@@ -1,0 +1,15 @@
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\4. Frameworks And Drivers\Libraries\NorthWind.ValidationService.FluentValidation\bin\Debug\net8.0\NorthWind.ValidationService.FluentValidation.deps.json
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\4. Frameworks And Drivers\Libraries\NorthWind.ValidationService.FluentValidation\bin\Debug\net8.0\NorthWind.ValidationService.FluentValidation.dll
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\4. Frameworks And Drivers\Libraries\NorthWind.ValidationService.FluentValidation\bin\Debug\net8.0\NorthWind.ValidationService.FluentValidation.pdb
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\4. Frameworks And Drivers\Libraries\NorthWind.ValidationService.FluentValidation\bin\Debug\net8.0\NorthWind.Validation.Entities.dll
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\4. Frameworks And Drivers\Libraries\NorthWind.ValidationService.FluentValidation\bin\Debug\net8.0\NorthWind.Validation.Entities.pdb
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\4. Frameworks And Drivers\Libraries\NorthWind.ValidationService.FluentValidation\obj\Debug\net8.0\NorthWind.ValidationService.FluentValidation.csproj.AssemblyReference.cache
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\4. Frameworks And Drivers\Libraries\NorthWind.ValidationService.FluentValidation\obj\Debug\net8.0\NorthWind.ValidationService.FluentValidation.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\4. Frameworks And Drivers\Libraries\NorthWind.ValidationService.FluentValidation\obj\Debug\net8.0\NorthWind.ValidationService.FluentValidation.AssemblyInfoInputs.cache
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\4. Frameworks And Drivers\Libraries\NorthWind.ValidationService.FluentValidation\obj\Debug\net8.0\NorthWind.ValidationService.FluentValidation.AssemblyInfo.cs
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\4. Frameworks And Drivers\Libraries\NorthWind.ValidationService.FluentValidation\obj\Debug\net8.0\NorthWind.ValidationService.FluentValidation.csproj.CoreCompileInputs.cache
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\4. Frameworks And Drivers\Libraries\NorthWind.ValidationService.FluentValidation\obj\Debug\net8.0\NorthWin.B536FC6D.Up2Date
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\4. Frameworks And Drivers\Libraries\NorthWind.ValidationService.FluentValidation\obj\Debug\net8.0\NorthWind.ValidationService.FluentValidation.dll
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\4. Frameworks And Drivers\Libraries\NorthWind.ValidationService.FluentValidation\obj\Debug\net8.0\refint\NorthWind.ValidationService.FluentValidation.dll
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\4. Frameworks And Drivers\Libraries\NorthWind.ValidationService.FluentValidation\obj\Debug\net8.0\NorthWind.ValidationService.FluentValidation.pdb
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\4. Frameworks And Drivers\Libraries\NorthWind.ValidationService.FluentValidation\obj\Debug\net8.0\ref\NorthWind.ValidationService.FluentValidation.dll

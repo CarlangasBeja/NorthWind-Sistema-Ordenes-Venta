@@ -1,0 +1,69 @@
+<div class="nw-auth-page">
+    <section class="nw-auth-shell nw-auth-shell-wide">
+        <div class="nw-auth-form-panel">
+            <span class="nw-kicker">ACCESO SEGURO</span>
+            <h1>Bienvenido de nuevo</h1>
+            <p class="text-secondary mb-4">Ingrese sus credenciales para acceder a las operaciones de venta de NorthWind.</p>
+
+            @if (!string.IsNullOrWhiteSpace(ViewModel.ErrorMessage))
+            {
+                <div class="nw-feedback nw-feedback-danger" role="alert">
+                    <div class="nw-feedback-icon">×</div>
+                    <div class="nw-feedback-body"><strong>No pudimos iniciar sesión</strong><p>@ViewModel.ErrorMessage</p></div>
+                </div>
+            }
+
+            <EditForm Model="ViewModel" OnValidSubmit="ViewModel.Login">
+                <ModelValidator Validator="ViewModel.Validator" @ref="ViewModel.ModelValidatorComponentReference" />
+                <ValidationSummary class="nw-validation-summary" />
+
+                <div class="form-group">
+                    <label for="Email" class="form-label fw-semibold">Correo electrónico <span class="nw-required">*</span></label>
+                    <InputText id="Email" class="form-control form-control-lg" autocomplete="email" inputmode="email" placeholder="nombre@ejemplo.com" @bind-Value="ViewModel.Email" />
+                    <ValidationMessage For="@(() => ViewModel.Email)" />
+                    <div class="form-text">Use el mismo correo con el que creó su cuenta.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Password" class="form-label fw-semibold">Contraseña <span class="nw-required">*</span></label>
+                    <div class="input-group input-group-lg">
+                        <InputText id="Password" class="form-control" autocomplete="current-password" placeholder="Ingrese su contraseña" type="@(ShowPassword ? "text" : "password")" @bind-Value="ViewModel.Password" />
+                        <button class="btn btn-outline-secondary" type="button" @onclick="TogglePassword">@(ShowPassword ? "Ocultar" : "Mostrar")</button>
+                    </div>
+                    <ValidationMessage For="@(() => ViewModel.Password)" />
+                </div>
+
+                <button class="btn btn-primary btn-lg w-100 nw-submit-button" disabled="@ViewModel.IsBusy">
+                    @if (ViewModel.IsBusy)
+                    {
+                        <span class="nw-spinner nw-spinner-light" aria-hidden="true"></span>
+                        <span>Verificando datos...</span>
+                    }
+                    else
+                    {
+                        <span>Iniciar sesión</span>
+                    }
+                </button>
+            </EditForm>
+
+            <div class="nw-auth-links">
+                <span class="text-secondary">¿Todavía no tiene una cuenta?</span>
+                <a href="user/register">Crear cuenta</a>
+            </div>
+        </div>
+
+        <aside class="nw-auth-info-panel">
+            <div class="nw-auth-info-icon">NW</div>
+            <h2>Acceso a Gestión de Ventas</h2>
+            <p>Su sesión protege las operaciones que modifican inventario y generan órdenes de venta.</p>
+            <div class="nw-auth-benefit"><span>✓</span><div><strong>Acceso autenticado</strong><small>Las operaciones de venta requieren una sesión válida.</small></div></div>
+            <div class="nw-auth-benefit"><span>✓</span><div><strong>Datos protegidos</strong><small>El frontend se comunica con el backend mediante servicios REST.</small></div></div>
+            <div class="nw-auth-benefit"><span>✓</span><div><strong>Mensajes claros</strong><small>Si algo falla, el sistema indica qué puede revisar y cómo continuar.</small></div></div>
+        </aside>
+    </section>
+</div>
+
+@code {
+    private bool ShowPassword;
+    private void TogglePassword() => ShowPassword = !ShowPassword;
+}

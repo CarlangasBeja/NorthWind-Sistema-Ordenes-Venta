@@ -1,0 +1,14 @@
+@page "/user/logout"
+
+<div class="nw-auth-page">
+    <section class="nw-auth-shell nw-logout-card text-center">
+        <div class="nw-confirm-icon nw-confirm-warning mx-auto">!</div>
+        <span class="nw-kicker">SEGURIDAD DE LA SESIÓN</span>
+        <h1 class="h3 mt-2">¿Desea cerrar sesión?</h1>
+        <p class="text-secondary">Al salir, necesitará ingresar nuevamente su correo y contraseña para registrar ventas o consultar órdenes de venta.</p>
+        <div class="d-flex justify-content-center gap-2 flex-wrap mt-4">
+            <a class="btn btn-outline-secondary" href="/">Cancelar</a>
+            <button class="btn btn-danger" @onclick="@(async () => await CloseSession())">Cerrar sesión</button>
+        </div>
+    </section>
+</div>

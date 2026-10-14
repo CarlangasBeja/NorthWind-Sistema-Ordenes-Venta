@@ -1,0 +1,329 @@
+{
+  "version": 4,
+  "targets": {
+    "net8.0": {
+      "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
+        }
+      },
+      "NorthWind.DomainLogs.Entities/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0",
+          "NorthWind.Entities": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/NorthWind.DomainLogs.Entities.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/NorthWind.DomainLogs.Entities.dll": {}
+        }
+      },
+      "NorthWind.Entities/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/NorthWind.Entities.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/NorthWind.Entities.dll": {}
+        }
+      },
+      "NorthWind.Events.Entities/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0"
+        },
+        "compile": {
+          "bin/placeholder/NorthWind.Events.Entities.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/NorthWind.Events.Entities.dll": {}
+        }
+      },
+      "NorthWind.Exceptions.Entities/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0",
+          "NorthWind.Validation.Entities": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/NorthWind.Exceptions.Entities.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/NorthWind.Exceptions.Entities.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
+      "NorthWind.Sales.Backend.BusinessObjects/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "NorthWind.Entities": "1.0.0",
+          "NorthWind.Exceptions.Entities": "1.0.0",
+          "NorthWind.Sales.Entities": "1.0.0",
+          "NorthWind.Validation.Entities": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/NorthWind.Sales.Backend.BusinessObjects.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/NorthWind.Sales.Backend.BusinessObjects.dll": {}
+        }
+      },
+      "NorthWind.Sales.Entities/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/NorthWind.Sales.Entities.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/NorthWind.Sales.Entities.dll": {}
+        }
+      },
+      "NorthWind.Transactions.Entities/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0"
+        },
+        "compile": {
+          "bin/placeholder/NorthWind.Transactions.Entities.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/NorthWind.Transactions.Entities.dll": {}
+        }
+      },
+      "NorthWind.Validation.Entities/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0"
+        },
+        "compile": {
+          "bin/placeholder/NorthWind.Validation.Entities.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/NorthWind.Validation.Entities.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.0": {
+      "sha512": "cjWrLkJXK0rs4zofsK4bSdg+jhDLTaxrkXu4gS6Y7MAlCvRyNNgwY/lJi5RDlQOnSZweHqoyvgvbdvQsRIW+hg==",
+      "type": "package",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/8.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.DependencyInjection.Abstractions.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.Abstractions.targets",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/net7.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net7.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+        "microsoft.extensions.dependencyinjection.abstractions.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "NorthWind.DomainLogs.Entities/1.0.0": {
+      "type": "project",
+      "path": "../../1. Enterprise Business Rules/NorthWind.DomainLogs.Entities/NorthWind.DomainLogs.Entities.csproj",
+      "msbuildProject": "../../1. Enterprise Business Rules/NorthWind.DomainLogs.Entities/NorthWind.DomainLogs.Entities.csproj"
+    },
+    "NorthWind.Entities/1.0.0": {
+      "type": "project",
+      "path": "../../1. Enterprise Business Rules/NorthWind.Entities/NorthWind.Entities.csproj",
+      "msbuildProject": "../../1. Enterprise Business Rules/NorthWind.Entities/NorthWind.Entities.csproj"
+    },
+    "NorthWind.Events.Entities/1.0.0": {
+      "type": "project",
+      "path": "../../1. Enterprise Business Rules/NorthWind.Events.Entities/NorthWind.Events.Entities.csproj",
+      "msbuildProject": "../../1. Enterprise Business Rules/NorthWind.Events.Entities/NorthWind.Events.Entities.csproj"
+    },
+    "NorthWind.Exceptions.Entities/1.0.0": {
+      "type": "project",
+      "path": "../../1. Enterprise Business Rules/NorthWind.Exceptions.Entities/NorthWind.Exceptions.Entities.csproj",
+      "msbuildProject": "../../1. Enterprise Business Rules/NorthWind.Exceptions.Entities/NorthWind.Exceptions.Entities.csproj"
+    },
+    "NorthWind.Sales.Backend.BusinessObjects/1.0.0": {
+      "type": "project",
+      "path": "../NorthWind.Sales.Backend.BusinessObjects/NorthWind.Sales.Backend.BusinessObjects.csproj",
+      "msbuildProject": "../NorthWind.Sales.Backend.BusinessObjects/NorthWind.Sales.Backend.BusinessObjects.csproj"
+    },
+    "NorthWind.Sales.Entities/1.0.0": {
+      "type": "project",
+      "path": "../../1. Enterprise Business Rules/NorthWind.Sales.Entities/NorthWind.Sales.Entities.csproj",
+      "msbuildProject": "../../1. Enterprise Business Rules/NorthWind.Sales.Entities/NorthWind.Sales.Entities.csproj"
+    },
+    "NorthWind.Transactions.Entities/1.0.0": {
+      "type": "project",
+      "path": "../../1. Enterprise Business Rules/NorthWind.Transactions.Entities/NorthWind.Transactions.Entities.csproj",
+      "msbuildProject": "../../1. Enterprise Business Rules/NorthWind.Transactions.Entities/NorthWind.Transactions.Entities.csproj"
+    },
+    "NorthWind.Validation.Entities/1.0.0": {
+      "type": "project",
+      "path": "../../1. Enterprise Business Rules/NorthWind.Validation.Entities/NorthWind.Validation.Entities.csproj",
+      "msbuildProject": "../../1. Enterprise Business Rules/NorthWind.Validation.Entities/NorthWind.Validation.Entities.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "Microsoft.Extensions.DependencyInjection.Abstractions >= 8.0.0",
+      "NorthWind.DomainLogs.Entities >= 1.0.0",
+      "NorthWind.Entities >= 1.0.0",
+      "NorthWind.Events.Entities >= 1.0.0",
+      "NorthWind.Sales.Backend.BusinessObjects >= 1.0.0",
+      "NorthWind.Sales.Entities >= 1.0.0",
+      "NorthWind.Transactions.Entities >= 1.0.0",
+      "NorthWind.Validation.Entities >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\ASUS VIVOBOOK\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\2. Application Business Rules\\NorthWind.Sales.Backend.UseCases\\NorthWind.Sales.Backend.UseCases.csproj",
+      "projectName": "NorthWind.Sales.Backend.UseCases",
+      "projectPath": "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\2. Application Business Rules\\NorthWind.Sales.Backend.UseCases\\NorthWind.Sales.Backend.UseCases.csproj",
+      "packagesPath": "C:\\Users\\ASUS VIVOBOOK\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\2. Application Business Rules\\NorthWind.Sales.Backend.UseCases\\obj\\",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\ASUS VIVOBOOK\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "C:\\NorthWind.Packages": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "framework": "net8.0",
+          "targetAlias": "net8.0",
+          "projectReferences": {
+            "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\1. Enterprise Business Rules\\NorthWind.DomainLogs.Entities\\NorthWind.DomainLogs.Entities.csproj": {
+              "projectPath": "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\1. Enterprise Business Rules\\NorthWind.DomainLogs.Entities\\NorthWind.DomainLogs.Entities.csproj"
+            },
+            "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\1. Enterprise Business Rules\\NorthWind.Entities\\NorthWind.Entities.csproj": {
+              "projectPath": "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\1. Enterprise Business Rules\\NorthWind.Entities\\NorthWind.Entities.csproj"
+            },
+            "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\1. Enterprise Business Rules\\NorthWind.Events.Entities\\NorthWind.Events.Entities.csproj": {
+              "projectPath": "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\1. Enterprise Business Rules\\NorthWind.Events.Entities\\NorthWind.Events.Entities.csproj"
+            },
+            "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\1. Enterprise Business Rules\\NorthWind.Sales.Entities\\NorthWind.Sales.Entities.csproj": {
+              "projectPath": "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\1. Enterprise Business Rules\\NorthWind.Sales.Entities\\NorthWind.Sales.Entities.csproj"
+            },
+            "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\1. Enterprise Business Rules\\NorthWind.Transactions.Entities\\NorthWind.Transactions.Entities.csproj": {
+              "projectPath": "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\1. Enterprise Business Rules\\NorthWind.Transactions.Entities\\NorthWind.Transactions.Entities.csproj"
+            },
+            "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\1. Enterprise Business Rules\\NorthWind.Validation.Entities\\NorthWind.Validation.Entities.csproj": {
+              "projectPath": "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\1. Enterprise Business Rules\\NorthWind.Validation.Entities\\NorthWind.Validation.Entities.csproj"
+            },
+            "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\2. Application Business Rules\\NorthWind.Sales.Backend.BusinessObjects\\NorthWind.Sales.Backend.BusinessObjects.csproj": {
+              "projectPath": "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\2. Application Business Rules\\NorthWind.Sales.Backend.BusinessObjects\\NorthWind.Sales.Backend.BusinessObjects.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "10.0.400"
+    },
+    "frameworks": {
+      "net8.0": {
+        "framework": "net8.0",
+        "targetAlias": "net8.0",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": {
+            "target": "Package",
+            "version": "[8.0.0, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[8.0.31, 8.0.31]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[8.0.31, 8.0.31]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[8.0.31, 8.0.31]"
+          }
+        ],
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.401/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+<AuthorizeView>
+    <Authorized>
+        <div class="nw-user-chip">
+            <span class="nw-user-avatar">@GetInitials(context)</span>
+            <span class="nw-user-copy">
+                <strong>@GetUserName(context)</strong>
+                <small>Sesión activa</small>
+            </span>
+            <a class="nw-user-logout" href="user/logout">@CommonMessages.CloseSessionText</a>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="nw-auth-nav">
+            <a class="btn btn-sm btn-link" href="user/register">@CommonMessages.CreateAccountText</a>
+            <a class="btn btn-sm btn-primary" href="user/login">@CommonMessages.LoginText</a>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private static string GetUserName(AuthenticationState context) =>
+        context.User.Claims
+            .Where(claim => claim.Type == "FullName")
+            .Select(claim => claim.Value)
+            .FirstOrDefault()
+        ?? context.User.Identity?.Name
+        ?? "Usuario";
+
+    private static string GetInitials(AuthenticationState context)
+    {
+        var name = GetUserName(context);
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0) return "U";
+        if (parts.Length == 1) return parts[0][0].ToString().ToUpperInvariant();
+        return $"{parts[0][0]}{parts[^1][0]}".ToUpperInvariant();
+    }
+}

@@ -1,0 +1,555 @@
+@inject NavigationManager Navigation
+
+<NavigationLock OnBeforeInternalNavigation="HandleInternalNavigation" ConfirmExternalNavigation="@ShouldWarnBeforeLeaving" />
+
+<div class="nw-page-heading">
+    <div>
+        <span class="nw-kicker">PUNTO DE VENTA</span>
+        <h1>Nueva orden de venta</h1>
+        <p>Registre una venta de forma segura. El sistema valida cliente, stock, cantidades y totales antes de guardar.</p>
+    </div>
+    <a class="btn btn-outline-secondary nw-btn-icon" href="/invoices">
+        <span aria-hidden="true">⌕</span>
+        Consultar órdenes de venta
+    </a>
+</div>
+
+<div class="nw-progress-strip mb-4">
+    <div class="nw-progress-item @(Order.HasSelectedCustomer ? "is-complete" : "")">
+        <span class="nw-progress-number">1</span>
+        <span><strong>Cliente</strong><small>@(Order.HasSelectedCustomer ? "Seleccionado" : "Pendiente")</small></span>
+    </div>
+    <div class="nw-progress-line @(Order.HasProducts ? "is-complete" : "")"></div>
+    <div class="nw-progress-item @(Order.HasProducts ? "is-complete" : "")">
+        <span class="nw-progress-number">2</span>
+        <span><strong>Productos</strong><small>@(Order.HasProducts ? $"{Order.OrderDetails.Count} agregado(s)" : "Pendiente")</small></span>
+    </div>
+    <div class="nw-progress-line @(Order.CanAttemptSave ? "is-complete" : "")"></div>
+    <div class="nw-progress-item @(Order.HasSavedOrder ? "is-complete" : "")">
+        <span class="nw-progress-number">3</span>
+        <span><strong>Confirmación</strong><small>@(Order.HasSavedOrder ? "Orden guardada" : "Revisar y guardar")</small></span>
+    </div>
+</div>
+
+@if (!ShowOrderSuccess && (!string.IsNullOrWhiteSpace(Order.ErrorMessage) || !string.IsNullOrWhiteSpace(Order.WarningMessage) || !string.IsNullOrWhiteSpace(Order.InformationMessage)))
+{
+    var toastType = !string.IsNullOrWhiteSpace(Order.ErrorMessage) ? "danger" : !string.IsNullOrWhiteSpace(Order.WarningMessage) ? "warning" : "success";
+    var toastTitle = toastType == "danger" ? "No pudimos completar la operación" : toastType == "warning" ? "Revise esta información" : "Operación realizada correctamente";
+    var toastMessage = toastType == "danger" ? Order.ErrorMessage : toastType == "warning" ? Order.WarningMessage : Order.InformationMessage;
+    var toastIcon = toastType == "danger" ? "×" : toastType == "warning" ? "!" : "✓";
+
+    <div class="nw-feedback nw-feedback-@toastType" role="@(toastType == "danger" ? "alert" : "status")" aria-live="polite">
+        <div class="nw-feedback-icon">@toastIcon</div>
+        <div class="nw-feedback-body">
+            <strong>@toastTitle</strong>
+            <p>@toastMessage</p>
+            @if (toastType == "success" && Order.LastOrderId.HasValue)
+            {
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    <a class="btn btn-sm btn-success" href="@($"/invoices?orderId={Order.LastOrderId.Value}")">Ver orden de venta generada</a>
+                    <button type="button" class="btn btn-sm btn-outline-success" @onclick="StartNewOrder">Crear otra orden</button>
+                </div>
+            }
+        </div>
+        <button type="button" class="nw-feedback-close" @onclick="Order.ClearMessages" aria-label="Cerrar notificación">×</button>
+        <span class="nw-toast-progress" aria-hidden="true"></span>
+    </div>
+}
+
+<EditForm Model="Order" OnValidSubmit="RequestSave">
+    <ModelValidator Validator="Order.Validator" @ref="Order.ModelValidatorComponentReference" />
+
+    <div class="nw-order-grid">
+        <div class="nw-order-main">
+            <section class="nw-card mb-4">
+                <div class="nw-card-header">
+                    <div>
+                        <span class="nw-step">01</span>
+                        <div>
+                            <h2>Cliente y entrega</h2>
+                            <p>Seleccione un cliente habilitado y complete los datos donde se entregará la compra.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-lg-4">
+                        <label class="form-label fw-semibold">ID del cliente <span class="nw-required">*</span></label>
+                        <div class="input-group">
+                            <InputText class="form-control" @bind-Value="Order.CustomerId" readonly />
+                            <button type="button" class="btn btn-primary" @onclick="OpenCustomerSearch" disabled="@Order.HasSavedOrder">Buscar</button>
+                        </div>
+                        <ValidationMessage For="() => Order.CustomerId" />
+                        <div class="form-text">No escriba el código manualmente. Use Buscar para evitar errores.</div>
+                    </div>
+                    <div class="col-lg-8">
+                        <label class="form-label fw-semibold">Nombre del cliente</label>
+                        <div class="nw-readonly-field @(Order.HasSelectedCustomer ? "has-value" : "")">
+                            <span>@(Order.HasSelectedCustomer ? Order.CustomerName : "Aún no ha seleccionado un cliente")</span>
+                            @if (Order.HasSelectedCustomer)
+                            {
+                                <span class="nw-status-pill nw-status-success">Cliente habilitado</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <label class="form-label fw-semibold">Dirección de entrega <span class="nw-required">*</span></label>
+                        <InputText class="form-control" maxlength="60" placeholder="Ej.: Av. Cevallos 123 y Mera" @bind-Value="Order.ShipAddress" disabled="@Order.HasSavedOrder" />
+                        <ValidationMessage For="() => Order.ShipAddress" />
+                        <div class="form-text">Máximo 60 caracteres.</div>
+                    </div>
+                    <div class="col-lg-2 col-md-4">
+                        <label class="form-label fw-semibold">Ciudad <span class="nw-required">*</span></label>
+                        <InputText class="form-control" maxlength="15" placeholder="Ambato" @bind-Value="Order.ShipCity" disabled="@Order.HasSavedOrder" />
+                        <ValidationMessage For="() => Order.ShipCity" />
+                    </div>
+                    <div class="col-lg-2 col-md-4">
+                        <label class="form-label fw-semibold">País <span class="nw-required">*</span></label>
+                        <InputText class="form-control" maxlength="15" placeholder="Ecuador" @bind-Value="Order.ShipCountry" disabled="@Order.HasSavedOrder" />
+                        <ValidationMessage For="() => Order.ShipCountry" />
+                    </div>
+                    <div class="col-lg-2 col-md-4">
+                        <label class="form-label fw-semibold">Código postal <span class="text-secondary fw-normal">(opcional)</span></label>
+                        <InputText class="form-control" maxlength="10" placeholder="180101" @bind-Value="Order.ShipPostalCode" disabled="@Order.HasSavedOrder" />
+                        <ValidationMessage For="() => Order.ShipPostalCode" />
+                    </div>
+                </div>
+            </section>
+
+            <section class="nw-card mb-4">
+                <div class="nw-card-header nw-card-header-actions">
+                    <div>
+                        <span class="nw-step">02</span>
+                        <div>
+                            <h2>Productos de la orden</h2>
+                            <p>El precio proviene del catálogo y no puede modificarse. La cantidad nunca debe superar el stock.</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary nw-btn-icon" @onclick="OpenProductSearchForAdd" disabled="@Order.HasSavedOrder">
+                        <span aria-hidden="true">＋</span>
+                        Agregar producto
+                    </button>
+                </div>
+
+                @if (Order.OrderDetails.Count == 0)
+                {
+                    <div class="nw-empty-state nw-empty-state-action">
+                        <div class="nw-empty-icon">▦</div>
+                        <strong>La orden todavía no tiene productos</strong>
+                        <span>Busque un producto del catálogo. Solo se mostrarán artículos con stock disponible.</span>
+                        <button type="button" class="btn btn-primary mt-3" @onclick="OpenProductSearchForAdd">Agregar primer producto</button>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table align-middle nw-order-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:75px">ID</th>
+                                    <th>Producto</th>
+                                    <th style="width:130px">Precio</th>
+                                    <th style="width:115px">Stock</th>
+                                    <th style="width:205px">Cantidad</th>
+                                    <th style="width:135px" class="text-end">Subtotal</th>
+                                    <th style="width:185px"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (var i = 0; i < Order.OrderDetails.Count; i++)
+                                {
+                                    var detail = Order.OrderDetails[i];
+                                    var currentIndex = i;
+                                    var exceedsStock = detail.Quantity > detail.UnitsInStock || detail.Quantity <= 0;
+                                    <tr class="@(exceedsStock ? "nw-row-danger" : string.Empty)">
+                                        <td><strong>#@detail.ProductId</strong></td>
+                                        <td>
+                                            <div class="nw-product-cell">
+                                                <strong>@detail.ProductName</strong>
+                                                @if (detail.UnitsInStock <= 5)
+                                                {
+                                                    <span class="nw-status-pill nw-status-warning">Stock bajo</span>
+                                                }
+                                            </div>
+                                        </td>
+                                        <td>@Money(detail.UnitPrice)</td>
+                                        <td><span class="nw-stock-chip @(detail.UnitsInStock <= 5 ? "is-low" : "")">@detail.UnitsInStock disponibles</span></td>
+                                        <td>
+                                            <div class="nw-quantity-control">
+                                                <button type="button" class="nw-qty-btn" title="Disminuir cantidad" @onclick="() => Order.DecreaseQuantity(currentIndex)" disabled="@Order.HasSavedOrder">−</button>
+                                                <InputNumber class="form-control text-center" min="1" max="@detail.UnitsInStock" @bind-Value="detail.Quantity" disabled="@Order.HasSavedOrder" />
+                                                <button type="button" class="nw-qty-btn" title="Aumentar cantidad" @onclick="() => Order.IncreaseQuantity(currentIndex)" disabled="@Order.HasSavedOrder">+</button>
+                                            </div>
+                                            <ValidationMessage For="() => detail.Quantity" />
+                                            @if (exceedsStock)
+                                            {
+                                                <div class="nw-field-warning">Ingrese una cantidad entre 1 y @detail.UnitsInStock.</div>
+                                            }
+                                        </td>
+                                        <td class="fw-bold text-end">@Money(detail.Subtotal)</td>
+                                        <td class="text-end">
+                                            <div class="d-flex gap-2 justify-content-end flex-wrap">
+                                                <button type="button" class="btn btn-sm btn-outline-primary" @onclick="() => OpenProductSearchForChange(currentIndex)" disabled="@Order.HasSavedOrder">Cambiar</button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger" @onclick="() => RequestRemoveProduct(currentIndex)" disabled="@Order.HasSavedOrder">Eliminar</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </section>
+        </div>
+
+        <aside class="nw-order-aside">
+            <section class="nw-card nw-sticky-summary">
+                <div class="nw-summary-heading">
+                    <span class="nw-kicker">REVISIÓN RÁPIDA</span>
+                    <h2>Resumen de la venta</h2>
+                </div>
+
+                <div class="nw-check-list">
+                    <div class="nw-check-item @(Order.HasSelectedCustomer ? "is-ok" : "")">
+                        <span>@(Order.HasSelectedCustomer ? "✓" : "1")</span>
+                        <div><strong>Cliente</strong><small>@(Order.HasSelectedCustomer ? Order.CustomerName : "Seleccione un cliente")</small></div>
+                    </div>
+                    <div class="nw-check-item @(Order.HasProducts ? "is-ok" : "")">
+                        <span>@(Order.HasProducts ? "✓" : "2")</span>
+                        <div><strong>Productos</strong><small>@(Order.HasProducts ? $"{Order.OrderDetails.Count} producto(s) · {Order.TotalUnits} unidad(es)" : "Agregue al menos un producto")</small></div>
+                    </div>
+                    <div class="nw-check-item @(!Order.HasStockIssues && Order.HasProducts ? "is-ok" : "")">
+                        <span>@(!Order.HasStockIssues && Order.HasProducts ? "✓" : "3")</span>
+                        <div><strong>Stock</strong><small>@(Order.HasStockIssues ? "Revise las cantidades" : Order.HasProducts ? "Cantidades dentro del stock" : "Pendiente")</small></div>
+                    </div>
+                </div>
+
+                <div class="nw-totals nw-totals-emphasis">
+                    <div><span>Subtotal</span><strong>@Money(Order.Subtotal)</strong></div>
+                    <div><span>IVA (15%)</span><strong>@Money(Order.Tax)</strong></div>
+                    <div class="nw-grand-total"><span>Total</span><strong>@Money(Order.Total)</strong></div>
+                </div>
+
+                <div class="nw-security-note">
+                    <span aria-hidden="true">✓</span>
+                    <p>Antes de guardar, el servidor vuelve a validar cliente, saldo pendiente y stock para evitar una venta inválida.</p>
+                </div>
+
+                <button class="btn btn-primary btn-lg w-100" type="submit" disabled="@(!Order.CanAttemptSave)">
+                    @(Order.IsSubmitting ? "Guardando orden..." : Order.HasSavedOrder ? "Orden guardada" : "Revisar y guardar orden")
+                </button>
+
+                @if (!Order.CanAttemptSave && !Order.HasSavedOrder)
+                {
+                    <div class="nw-submit-help">
+                        @if (!Order.HasSelectedCustomer)
+                        {
+                            <span>Seleccione un cliente para continuar.</span>
+                        }
+                        else if (!Order.HasProducts)
+                        {
+                            <span>Agregue al menos un producto para continuar.</span>
+                        }
+                        else if (Order.HasStockIssues)
+                        {
+                            <span>Corrija las cantidades que superan el stock.</span>
+                        }
+                    </div>
+                }
+
+                <button type="button" class="btn btn-link text-secondary w-100 mt-2" @onclick="RequestCancelOrder" disabled="@Order.IsSubmitting">
+                    Cancelar y salir
+                </button>
+            </section>
+        </aside>
+    </div>
+</EditForm>
+
+<CustomerSearchModal IsOpen="ShowCustomerSearch"
+                     OnSelected="CustomerSelectedAsync"
+                     OnClose="CloseCustomerSearchAsync" />
+
+<ProductSearchModal IsOpen="ShowProductSearch"
+                    ExcludedProductIds="ProductIdsUnavailable"
+                    OnSelected="ProductSelectedAsync"
+                    OnClose="CloseProductSearchAsync" />
+
+@if (ShowRemoveConfirmation)
+{
+    <div class="nw-modal-backdrop">
+        <section class="nw-modal nw-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="removeProductTitle">
+            <div class="nw-confirm-icon nw-confirm-danger">!</div>
+            <h2 id="removeProductTitle">¿Eliminar este producto?</h2>
+            <p>Se quitará <strong>@ProductNameToRemove</strong> del detalle. Esta acción no afecta el inventario hasta que la orden sea guardada.</p>
+            <div class="nw-confirm-actions">
+                <button type="button" class="btn btn-outline-secondary" @onclick="CloseRemoveConfirmation">Conservar producto</button>
+                <button type="button" class="btn btn-danger" @onclick="ConfirmRemoveProduct">Sí, eliminar</button>
+            </div>
+        </section>
+    </div>
+}
+
+@if (ShowSaveConfirmation)
+{
+    <div class="nw-modal-backdrop">
+        <section class="nw-modal nw-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="saveOrderTitle">
+            <div class="nw-confirm-icon nw-confirm-primary">✓</div>
+            <h2 id="saveOrderTitle">Confirme la orden de venta</h2>
+            <p>Revise este resumen antes de guardar. Después del registro se actualizará el inventario.</p>
+            <div class="nw-confirm-summary">
+                <div><span>Cliente</span><strong>@Order.CustomerName (@Order.CustomerId)</strong></div>
+                <div><span>Productos</span><strong>@Order.OrderDetails.Count línea(s) · @Order.TotalUnits unidad(es)</strong></div>
+                <div><span>Total</span><strong>@Money(Order.Total)</strong></div>
+            </div>
+            <div class="nw-confirm-actions">
+                <button type="button" class="btn btn-outline-secondary" @onclick="CloseSaveConfirmation" disabled="@Order.IsSubmitting">Volver a revisar</button>
+                <button type="button" class="btn btn-primary" @onclick="ConfirmSaveAsync" disabled="@Order.IsSubmitting">
+                    @(Order.IsSubmitting ? "Guardando..." : "Confirmar y guardar")
+                </button>
+            </div>
+        </section>
+    </div>
+}
+
+
+@* Modal de éxito: solo se abre después de que la API haya devuelto un ID válido. *@
+@if (ShowOrderSuccess && Order.LastOrderId is > 0)
+{
+    <div class="nw-modal-backdrop nw-order-success-backdrop">
+        <section class="nw-modal nw-order-success-modal" role="dialog" aria-modal="true"
+                 aria-labelledby="nwOrderSuccessTitle" aria-describedby="nwOrderSuccessDescription">
+            <div class="nw-order-success-top">
+                <div class="nw-order-success-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" width="34" height="34">
+                        <path d="m5 12 4.5 4.5L19 7" stroke="currentColor" stroke-width="2.6"
+                              stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <span class="nw-order-success-eyebrow">VENTA CONFIRMADA</span>
+                <h2 id="nwOrderSuccessTitle">¡Orden de compra realizada correctamente!</h2>
+                <p id="nwOrderSuccessDescription">
+                    La orden se registró correctamente. Ahora puede consultar los datos
+                    de entrega, los productos y el comprobante generado.
+                </p>
+            </div>
+
+            <div class="nw-order-success-summary">
+                <div class="nw-order-success-reference">
+                    <div>
+                        <span class="nw-order-success-label">NÚMERO DE ORDEN</span>
+                        <strong>@SalesConstants.GetInvoiceNumber(Order.LastOrderId.Value)</strong>
+                    </div>
+                    <span class="nw-order-success-status"><span aria-hidden="true">●</span> Registrada</span>
+                </div>
+                <div class="nw-order-success-facts">
+                    <div><span>Cliente</span><strong>@Order.CustomerName</strong></div>
+                    <div><span>Productos</span><strong>@Order.OrderDetails.Count producto(s) · @Order.TotalUnits unidad(es)</strong></div>
+                    <div><span>Total de la orden</span><strong class="nw-order-success-total">@Money(Order.Total)</strong></div>
+                </div>
+            </div>
+
+            <div class="nw-order-success-actions">
+                <button type="button" class="btn btn-outline-secondary" @onclick="CloseOrderSuccess">
+                    Cerrar
+                </button>
+                <button type="button" class="btn btn-primary nw-order-success-view" @onclick="ViewCreatedOrder">
+                    Ver orden <span aria-hidden="true">→</span>
+                </button>
+            </div>
+            <p class="nw-order-success-footnote">
+                «Ver orden» abre la orden guardada y permite consultar su detalle y comprobante.
+            </p>
+        </section>
+    </div>
+}
+
+@if (ShowCancelConfirmation)
+{
+    <div class="nw-modal-backdrop">
+        <section class="nw-modal nw-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="cancelOrderTitle">
+            <div class="nw-confirm-icon nw-confirm-warning">!</div>
+            <h2 id="cancelOrderTitle">¿Salir sin guardar?</h2>
+            <p>Los datos ingresados en esta orden se perderán porque todavía no han sido registrados.</p>
+            <div class="nw-confirm-actions">
+                <button type="button" class="btn btn-outline-secondary" @onclick="CloseCancelConfirmation">Seguir editando</button>
+                <button type="button" class="btn btn-danger" @onclick="ConfirmCancelOrder">Salir sin guardar</button>
+            </div>
+        </section>
+    </div>
+}
+
+@code {
+    private bool ShowCustomerSearch;
+    private bool ShowProductSearch;
+    private bool ShowRemoveConfirmation;
+    private bool ShowSaveConfirmation;
+    private bool ShowCancelConfirmation;
+    private bool ShowOrderSuccess;
+    private int? ProductIndexToChange;
+    private int? ProductIndexToRemove;
+    private string ProductNameToRemove = string.Empty;
+    private string PendingNavigationTarget = "/";
+    private bool AllowNavigation;
+
+    private bool ShouldWarnBeforeLeaving => Order.HasDraftData && !Order.HasSavedOrder && !AllowNavigation;
+
+    private static string Money(decimal value) => $"$ {value:N2}";
+
+    private IReadOnlyCollection<int> ProductIdsUnavailable =>
+        Order.OrderDetails
+            .Where((_, index) => !ProductIndexToChange.HasValue || index != ProductIndexToChange.Value)
+            .Select(detail => detail.ProductId)
+            .ToArray();
+
+    private void OpenCustomerSearch()
+    {
+        Order.ClearMessages();
+        ShowCustomerSearch = true;
+    }
+
+    private void OpenProductSearchForAdd()
+    {
+        Order.ClearMessages();
+        ProductIndexToChange = null;
+        ShowProductSearch = true;
+    }
+
+    private void OpenProductSearchForChange(int index)
+    {
+        Order.ClearMessages();
+        ProductIndexToChange = index;
+        ShowProductSearch = true;
+    }
+
+    private void RequestRemoveProduct(int index)
+    {
+        if (index < 0 || index >= Order.OrderDetails.Count) return;
+        ProductIndexToRemove = index;
+        ProductNameToRemove = Order.OrderDetails[index].ProductName;
+        ShowRemoveConfirmation = true;
+    }
+
+    private void ConfirmRemoveProduct()
+    {
+        if (ProductIndexToRemove.HasValue)
+            Order.RemoveProduct(ProductIndexToRemove.Value);
+
+        CloseRemoveConfirmation();
+    }
+
+    private void CloseRemoveConfirmation()
+    {
+        ShowRemoveConfirmation = false;
+        ProductIndexToRemove = null;
+        ProductNameToRemove = string.Empty;
+    }
+
+    private void RequestSave()
+    {
+        Order.ClearMessages();
+        if (!Order.CanAttemptSave)
+        {
+            Order.SetWarning("La orden todavía no está lista para guardarse. Complete los pasos indicados en el resumen.");
+            return;
+        }
+
+        ShowSaveConfirmation = true;
+    }
+
+    private async Task ConfirmSaveAsync()
+    {
+        ShowSaveConfirmation = false;
+        await Order.Send();
+        // No mostrar confirmación si la petición falla o no devuelve un ID válido.
+        ShowOrderSuccess = Order.LastOrderId is > 0;
+    }
+
+    private void CloseOrderSuccess() => ShowOrderSuccess = false;
+
+    private void ViewCreatedOrder()
+    {
+        if (Order.LastOrderId is not int orderId || orderId <= 0)
+            return;
+
+        ShowOrderSuccess = false;
+        AllowNavigation = true;
+        // InvoiceSearch recibe orderId y recupera el detalle desde la API existente.
+        Navigation.NavigateTo($"/invoices?orderId={orderId}");
+    }
+
+    private void CloseSaveConfirmation() => ShowSaveConfirmation = false;
+
+    private void RequestCancelOrder()
+    {
+        PendingNavigationTarget = "/";
+        if (!ShouldWarnBeforeLeaving)
+        {
+            Navigation.NavigateTo(PendingNavigationTarget);
+            return;
+        }
+
+        ShowCancelConfirmation = true;
+    }
+
+    private Task HandleInternalNavigation(LocationChangingContext context)
+    {
+        if (!ShouldWarnBeforeLeaving)
+            return Task.CompletedTask;
+
+        context.PreventNavigation();
+        PendingNavigationTarget = context.TargetLocation;
+        ShowCancelConfirmation = true;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    private void ConfirmCancelOrder()
+    {
+        AllowNavigation = true;
+        ShowCancelConfirmation = false;
+        Navigation.NavigateTo(PendingNavigationTarget);
+    }
+
+    private void CloseCancelConfirmation()
+    {
+        ShowCancelConfirmation = false;
+        PendingNavigationTarget = "/";
+    }
+
+    private void StartNewOrder()
+    {
+        ShowOrderSuccess = false;
+        Order.ResetForNewOrder();
+        ShowSaveConfirmation = false;
+    }
+
+    private Task CustomerSelectedAsync(CustomerSearchItemDto customer)
+    {
+        Order.SelectCustomer(customer);
+        return Task.CompletedTask;
+    }
+
+    private Task ProductSelectedAsync(ProductSearchItemDto product)
+    {
+        if (ProductIndexToChange.HasValue)
+            Order.ChangeProduct(ProductIndexToChange.Value, product);
+        else
+            Order.AddProduct(product);
+
+        return Task.CompletedTask;
+    }
+
+    private Task CloseCustomerSearchAsync()
+    {
+        ShowCustomerSearch = false;
+        return Task.CompletedTask;
+    }
+
+    private Task CloseProductSearchAsync()
+    {
+        ShowProductSearch = false;
+        ProductIndexToChange = null;
+        return Task.CompletedTask;
+    }
+}

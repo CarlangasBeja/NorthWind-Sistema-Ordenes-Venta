@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="ProductIdGreaterThanZero" xml:space="preserve"><value>Seleccione un producto válido.</value></data>
+  <data name="QuantityGreaterThanZero" xml:space="preserve"><value>La cantidad debe ser mayor que cero.</value></data>
+  <data name="UnitPriceGreaterThanZero" xml:space="preserve"><value>El precio unitario debe ser mayor que cero.</value></data>
+  <data name="CustomerIdRequired" xml:space="preserve"><value>Seleccione un cliente antes de continuar.</value></data>
+  <data name="CustomerIdRequiredLength" xml:space="preserve"><value>El código del cliente debe tener exactamente 5 caracteres.</value></data>
+  <data name="ShipAddressRequired" xml:space="preserve"><value>Ingrese la dirección de entrega.</value></data>
+  <data name="ShipAddressMaximumLength" xml:space="preserve"><value>La dirección de entrega no puede superar 60 caracteres.</value></data>
+  <data name="ShipCityRequired" xml:space="preserve"><value>Ingrese la ciudad de entrega.</value></data>
+  <data name="ShipCityMinimumLength" xml:space="preserve"><value>La ciudad debe tener al menos 3 caracteres.</value></data>
+  <data name="ShipCityMaximumLength" xml:space="preserve"><value>La ciudad no puede superar 15 caracteres.</value></data>
+  <data name="ShipCountryRequired" xml:space="preserve"><value>Ingrese el país de entrega.</value></data>
+  <data name="ShipCountryMinimumLength" xml:space="preserve"><value>El país debe tener al menos 3 caracteres.</value></data>
+  <data name="ShipCountryMaximumLength" xml:space="preserve"><value>El país no puede superar 15 caracteres.</value></data>
+  <data name="ShipPostalCodeMaximumLength" xml:space="preserve"><value>El código postal no puede superar 10 caracteres.</value></data>
+  <data name="OrderDetailsRequired" xml:space="preserve"><value>Agregue los productos de la orden.</value></data>
+  <data name="OrderDetailsNotEmpty" xml:space="preserve"><value>Agregue al menos un producto antes de guardar la orden.</value></data>
+</root>

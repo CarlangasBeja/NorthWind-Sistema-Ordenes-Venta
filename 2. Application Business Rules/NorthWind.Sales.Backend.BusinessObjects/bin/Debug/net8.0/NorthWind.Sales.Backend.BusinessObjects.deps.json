@@ -1,0 +1,84 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "NorthWind.Sales.Backend.BusinessObjects/1.0.0": {
+        "dependencies": {
+          "NorthWind.Entities": "1.0.0",
+          "NorthWind.Exceptions.Entities": "1.0.0",
+          "NorthWind.Sales.Entities": "1.0.0",
+          "NorthWind.Validation.Entities": "1.0.0"
+        },
+        "runtime": {
+          "NorthWind.Sales.Backend.BusinessObjects.dll": {}
+        }
+      },
+      "NorthWind.Entities/1.0.0": {
+        "runtime": {
+          "NorthWind.Entities.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "NorthWind.Exceptions.Entities/1.0.0": {
+        "dependencies": {
+          "NorthWind.Validation.Entities": "1.0.0"
+        },
+        "runtime": {
+          "NorthWind.Exceptions.Entities.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "NorthWind.Sales.Entities/1.0.0": {
+        "runtime": {
+          "NorthWind.Sales.Entities.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "NorthWind.Validation.Entities/1.0.0": {
+        "runtime": {
+          "NorthWind.Validation.Entities.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "NorthWind.Sales.Backend.BusinessObjects/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NorthWind.Entities/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NorthWind.Exceptions.Entities/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NorthWind.Sales.Entities/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NorthWind.Validation.Entities/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

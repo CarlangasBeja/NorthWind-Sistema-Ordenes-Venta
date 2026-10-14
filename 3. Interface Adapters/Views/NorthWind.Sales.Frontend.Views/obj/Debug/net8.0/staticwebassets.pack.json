@@ -1,0 +1,29 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\ASUS VIVOBOOK\\Desktop\\NorthWind\\3. Interface Adapters\\Views\\NorthWind.Sales.Frontend.Views\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\NorthWind.Sales.Frontend.Views.bundle.scp.css",
+      "PackagePath": "staticwebassets\\NorthWind.Sales.Frontend.Views.dl264rvf41.bundle.scp.css"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.NorthWind.Sales.Frontend.Views.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.NorthWind.Sales.Frontend.Views.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.NorthWind.Sales.Frontend.Views.props",
+      "PackagePath": "build\\NorthWind.Sales.Frontend.Views.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.NorthWind.Sales.Frontend.Views.props",
+      "PackagePath": "buildMultiTargeting\\NorthWind.Sales.Frontend.Views.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.NorthWind.Sales.Frontend.Views.props",
+      "PackagePath": "buildTransitive\\NorthWind.Sales.Frontend.Views.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

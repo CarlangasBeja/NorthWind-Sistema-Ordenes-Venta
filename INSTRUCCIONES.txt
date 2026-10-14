@@ -1,0 +1,27 @@
+NORTHWIND - PARCHE API + FRONTEND EN ESPAÑOL
+
+1. Detenga la API y Blazor (Ctrl+C en ambas terminales).
+2. Extraiga este ZIP sobre:
+   C:\Users\ASUS VIVOBOOK\Desktop\NorthWind
+3. Elija "Reemplazar los archivos en el destino".
+4. Compile:
+   dotnet build .\NorthWind.sln
+5. Inicie la API:
+   dotnet run --project ".\4. Frameworks And Drivers\UI\NorthWind.Sales.WebApi\NorthWind.Sales.WebApi.csproj"
+6. Confirme que Swagger abre en:
+   https://localhost:7154/swagger
+7. Inicie Blazor en otra terminal:
+   dotnet run --project ".\4. Frameworks And Drivers\UIs\NorthWind.Sales.BlazorClient\NorthWind.Sales.BlazorClient.csproj"
+8. Abra:
+   https://localhost:7254
+9. El parche invalida el token anterior a propósito. Inicie sesión nuevamente.
+10. Pruebe búsqueda de clientes, productos y facturas.
+
+Cambios principales:
+- Frontend y mensajes de validación en español.
+- Token de sesión versionado para evitar tokens viejos rechazados por la API.
+- Eliminación automática del token cuando la API responde 401.
+- Validación de expiración del JWT en Blazor.
+- Orden de middleware de autenticación/autorización corregido antes de mapear endpoints.
+- Mensajes diferenciados para sesión vencida, falta de permisos o API no disponible.
+- Factura PDF en español.

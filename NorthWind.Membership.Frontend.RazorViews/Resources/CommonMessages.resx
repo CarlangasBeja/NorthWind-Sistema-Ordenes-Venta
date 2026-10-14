@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="OK" xml:space="preserve"><value>Aceptar</value></data>
+  <data name="EmailLabel" xml:space="preserve"><value>Correo electrónico</value></data>
+  <data name="PasswordLabel" xml:space="preserve"><value>Contraseña</value></data>
+  <data name="CreateAccountText" xml:space="preserve"><value>Crear cuenta</value></data>
+  <data name="LoginText" xml:space="preserve"><value>Iniciar sesión</value></data>
+  <data name="CloseSessionText" xml:space="preserve"><value>Cerrar sesión</value></data>
+</root>

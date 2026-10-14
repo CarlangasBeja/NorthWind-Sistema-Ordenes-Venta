@@ -1,0 +1,110 @@
+<div class="nw-auth-page">
+    <section class="nw-auth-shell nw-auth-shell-wide">
+        <div class="nw-auth-form-panel">
+            <span class="nw-kicker">REGISTRO DE USUARIO</span>
+            <h1>Crear una cuenta</h1>
+            <p class="text-secondary mb-4">Complete sus datos. Los campos marcados con * son obligatorios.</p>
+
+            @if (!string.IsNullOrWhiteSpace(ViewModel.InformationMessage))
+            {
+                <div class="nw-feedback nw-feedback-success" role="status">
+                    <div class="nw-feedback-icon">✓</div>
+                    <div class="nw-feedback-body"><strong>Cuenta creada correctamente</strong><p>@ViewModel.InformationMessage</p><a class="btn btn-sm btn-success mt-2" href="user/login">Ir a iniciar sesión</a></div>
+                    <button type="button" class="nw-feedback-close" @onclick="ViewModel.ClearMessages" aria-label="Cerrar mensaje">×</button>
+                </div>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(ViewModel.ErrorMessage))
+            {
+                <div class="nw-feedback nw-feedback-danger" role="alert">
+                    <div class="nw-feedback-icon">×</div>
+                    <div class="nw-feedback-body"><strong>No pudimos crear la cuenta</strong><p>@ViewModel.ErrorMessage</p></div>
+                    <button type="button" class="nw-feedback-close" @onclick="ViewModel.ClearMessages" aria-label="Cerrar mensaje">×</button>
+                </div>
+            }
+
+            <EditForm Model="ViewModel" OnValidSubmit="ViewModel.Register">
+                <ModelValidator Validator="ViewModel.Validator" @ref="ViewModel.ModelValidatorComponentReference" />
+                <ValidationSummary class="nw-validation-summary" />
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="FirstName" class="form-label fw-semibold">Nombres <span class="nw-required">*</span></label>
+                        <InputText id="FirstName" class="form-control" autocomplete="given-name" maxlength="80" placeholder="Ej.: Carlos" @bind-Value="ViewModel.FirstName" />
+                        <ValidationMessage For="@(() => ViewModel.FirstName)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="LastName" class="form-label fw-semibold">Apellidos <span class="nw-required">*</span></label>
+                        <InputText id="LastName" class="form-control" autocomplete="family-name" maxlength="80" placeholder="Ej.: Bejarano" @bind-Value="ViewModel.LastName" />
+                        <ValidationMessage For="@(() => ViewModel.LastName)" />
+                    </div>
+                    <div class="col-12">
+                        <label for="Email" class="form-label fw-semibold">Correo electrónico <span class="nw-required">*</span></label>
+                        <InputText id="Email" class="form-control" autocomplete="email" inputmode="email" placeholder="nombre@ejemplo.com" @bind-Value="ViewModel.Email" />
+                        <ValidationMessage For="@(() => ViewModel.Email)" />
+                        <div class="form-text">Este correo se utilizará para iniciar sesión.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Password" class="form-label fw-semibold">Contraseña <span class="nw-required">*</span></label>
+                        <InputText id="Password" class="form-control" autocomplete="new-password" type="@(ShowPassword ? "text" : "password")" placeholder="Cree una contraseña segura" @bind-Value="ViewModel.Password" />
+                        <ValidationMessage For="@(() => ViewModel.Password)" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="PasswordConfirmation" class="form-label fw-semibold">Confirmar contraseña <span class="nw-required">*</span></label>
+                        <div class="input-group">
+                            <InputText id="PasswordConfirmation" class="form-control" autocomplete="new-password" type="@(ShowPassword ? "text" : "password")" placeholder="Repita la contraseña" @bind-Value="ViewModel.PasswordConfirmation" />
+                            <button class="btn btn-outline-secondary" type="button" @onclick="TogglePassword">@(ShowPassword ? "Ocultar" : "Mostrar")</button>
+                        </div>
+                        <ValidationMessage For="@(() => ViewModel.PasswordConfirmation)" />
+                    </div>
+                </div>
+
+                <div class="nw-password-rules">
+                    <strong>La contraseña debe cumplir:</strong>
+                    <div class="nw-password-rule @(HasMinimumLength ? "is-ok" : "")"><span>@(HasMinimumLength ? "✓" : "·")</span>Al menos 6 caracteres</div>
+                    <div class="nw-password-rule @(HasUppercase ? "is-ok" : "")"><span>@(HasUppercase ? "✓" : "·")</span>Una letra mayúscula</div>
+                    <div class="nw-password-rule @(HasLowercase ? "is-ok" : "")"><span>@(HasLowercase ? "✓" : "·")</span>Una letra minúscula</div>
+                    <div class="nw-password-rule @(HasDigit ? "is-ok" : "")"><span>@(HasDigit ? "✓" : "·")</span>Un número</div>
+                    <div class="nw-password-rule @(HasSpecial ? "is-ok" : "")"><span>@(HasSpecial ? "✓" : "·")</span>Un carácter especial</div>
+                    <div class="nw-password-rule @(PasswordsMatch ? "is-ok" : "")"><span>@(PasswordsMatch ? "✓" : "·")</span>Las dos contraseñas coinciden</div>
+                </div>
+
+                <button class="btn btn-primary btn-lg w-100 nw-submit-button" disabled="@ViewModel.IsBusy">
+                    @if (ViewModel.IsBusy)
+                    {
+                        <span class="nw-spinner nw-spinner-light" aria-hidden="true"></span><span>Creando cuenta...</span>
+                    }
+                    else
+                    {
+                        <span>Crear cuenta</span>
+                    }
+                </button>
+            </EditForm>
+
+            <div class="nw-auth-links">
+                <span class="text-secondary">¿Ya tiene una cuenta?</span>
+                <a href="user/login">Iniciar sesión</a>
+            </div>
+        </div>
+
+        <aside class="nw-auth-info-panel">
+            <div class="nw-auth-info-icon">NW</div>
+            <h2>Una cuenta para operar con seguridad</h2>
+            <p>El registro habilita el acceso al punto de venta y permite asociar las operaciones al usuario autenticado.</p>
+            <div class="nw-auth-benefit"><span>✓</span><div><strong>Validación inmediata</strong><small>El formulario muestra exactamente qué dato necesita corregirse.</small></div></div>
+            <div class="nw-auth-benefit"><span>✓</span><div><strong>Contraseña controlada</strong><small>Los requisitos se muestran mientras completa el formulario.</small></div></div>
+            <div class="nw-auth-benefit"><span>✓</span><div><strong>Correo único</strong><small>El sistema evita registrar dos cuentas con el mismo correo.</small></div></div>
+        </aside>
+    </section>
+</div>
+
+@code {
+    private bool ShowPassword;
+    private bool HasMinimumLength => ViewModel.Password?.Length >= 6;
+    private bool HasUppercase => ViewModel.Password?.Any(char.IsUpper) == true;
+    private bool HasLowercase => ViewModel.Password?.Any(char.IsLower) == true;
+    private bool HasDigit => ViewModel.Password?.Any(char.IsDigit) == true;
+    private bool HasSpecial => ViewModel.Password?.Any(c => !char.IsLetterOrDigit(c)) == true;
+    private bool PasswordsMatch => !string.IsNullOrEmpty(ViewModel.Password) && ViewModel.Password == ViewModel.PasswordConfirmation;
+    private void TogglePassword() => ShowPassword = !ShowPassword;
+}

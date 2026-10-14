@@ -1,0 +1,16 @@
+﻿<Project>
+  <ItemGroup>
+    <StaticWebAssetEndpoint Include="_content/NorthWind.RazorComponents/NorthWind.RazorComponents.bundle.scp.css">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\NorthWind.RazorComponents.pthhb2wm6g.bundle.scp.css'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-g9gy7DnFGCXqxINihxjVg2KZJ\u002BYBakltrmVCbA7id7E="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"3890"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022g9gy7DnFGCXqxINihxjVg2KZJ\u002BYBakltrmVCbA7id7E=\u0022"},{"Name":"Last-Modified","Value":"Mon, 12 Oct 2026 20:54:41 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/NorthWind.RazorComponents/NorthWind.RazorComponents.pthhb2wm6g.bundle.scp.css">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\NorthWind.RazorComponents.pthhb2wm6g.bundle.scp.css'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"pthhb2wm6g"},{"Name":"integrity","Value":"sha256-g9gy7DnFGCXqxINihxjVg2KZJ\u002BYBakltrmVCbA7id7E="},{"Name":"label","Value":"_content/NorthWind.RazorComponents/NorthWind.RazorComponents.bundle.scp.css"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"3890"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022g9gy7DnFGCXqxINihxjVg2KZJ\u002BYBakltrmVCbA7id7E=\u0022"},{"Name":"Last-Modified","Value":"Mon, 12 Oct 2026 20:54:41 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+  </ItemGroup>
+</Project>

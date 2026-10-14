@@ -1,0 +1,10 @@
+@page "/createorder"
+@attribute [Authorize]
+<PageTitle>Nueva orden | NorthWind Ventas</PageTitle>
+<ErrorBoundary @ref="ErrorBoundaryRef">
+    <ChildContent><CreateOrderComponent Order="ViewModel" /></ChildContent>
+    <ErrorContent>
+        <ExceptionDisplay Exception="context" />
+        <button class="btn btn-primary mt-3" @onclick="Recover">Reintentar</button>
+    </ErrorContent>
+</ErrorBoundary>

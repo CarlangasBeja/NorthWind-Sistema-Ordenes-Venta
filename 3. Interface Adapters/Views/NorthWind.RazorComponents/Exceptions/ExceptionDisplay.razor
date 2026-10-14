@@ -1,0 +1,12 @@
+<div class="nw-system-error" role="alert">
+    <div class="nw-system-error-icon">!</div>
+    <div>
+        <strong>No pudimos completar esta acción.</strong>
+        <p>Ocurrió un problema inesperado. Puede reintentar la operación. Si el problema continúa, verifique que los servicios del sistema estén iniciados.</p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Exception Exception { get; set; } = null!;
+}

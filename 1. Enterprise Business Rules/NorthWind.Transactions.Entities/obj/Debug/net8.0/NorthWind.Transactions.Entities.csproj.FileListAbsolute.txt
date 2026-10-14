@@ -1,0 +1,12 @@
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Transactions.Entities\bin\Debug\net8.0\NorthWind.Transactions.Entities.deps.json
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Transactions.Entities\bin\Debug\net8.0\NorthWind.Transactions.Entities.dll
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Transactions.Entities\bin\Debug\net8.0\NorthWind.Transactions.Entities.pdb
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Transactions.Entities\obj\Debug\net8.0\NorthWind.Transactions.Entities.csproj.AssemblyReference.cache
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Transactions.Entities\obj\Debug\net8.0\NorthWind.Transactions.Entities.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Transactions.Entities\obj\Debug\net8.0\NorthWind.Transactions.Entities.AssemblyInfoInputs.cache
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Transactions.Entities\obj\Debug\net8.0\NorthWind.Transactions.Entities.AssemblyInfo.cs
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Transactions.Entities\obj\Debug\net8.0\NorthWind.Transactions.Entities.csproj.CoreCompileInputs.cache
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Transactions.Entities\obj\Debug\net8.0\NorthWind.Transactions.Entities.dll
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Transactions.Entities\obj\Debug\net8.0\refint\NorthWind.Transactions.Entities.dll
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Transactions.Entities\obj\Debug\net8.0\NorthWind.Transactions.Entities.pdb
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Transactions.Entities\obj\Debug\net8.0\ref\NorthWind.Transactions.Entities.dll

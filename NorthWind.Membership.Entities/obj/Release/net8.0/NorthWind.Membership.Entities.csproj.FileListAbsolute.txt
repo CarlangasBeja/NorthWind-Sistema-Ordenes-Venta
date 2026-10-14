@@ -1,0 +1,15 @@
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\NorthWind.Membership.Entities\bin\Release\net8.0\NorthWind.Membership.Entities.deps.json
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\NorthWind.Membership.Entities\bin\Release\net8.0\NorthWind.Membership.Entities.dll
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\NorthWind.Membership.Entities\bin\Release\net8.0\NorthWind.Membership.Entities.pdb
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\NorthWind.Membership.Entities\obj\Release\net8.0\NorthWind.Membership.Entities.csproj.AssemblyReference.cache
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\NorthWind.Membership.Entities\obj\Release\net8.0\NorthWind.Membership.Entities.Resources.UserLoginMessages.resources
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\NorthWind.Membership.Entities\obj\Release\net8.0\NorthWind.Membership.Entities.Resources.UserRegistrationMessages.resources
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\NorthWind.Membership.Entities\obj\Release\net8.0\NorthWind.Membership.Entities.csproj.GenerateResource.cache
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\NorthWind.Membership.Entities\obj\Release\net8.0\NorthWind.Membership.Entities.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\NorthWind.Membership.Entities\obj\Release\net8.0\NorthWind.Membership.Entities.AssemblyInfoInputs.cache
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\NorthWind.Membership.Entities\obj\Release\net8.0\NorthWind.Membership.Entities.AssemblyInfo.cs
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\NorthWind.Membership.Entities\obj\Release\net8.0\NorthWind.Membership.Entities.csproj.CoreCompileInputs.cache
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\NorthWind.Membership.Entities\obj\Release\net8.0\NorthWind.Membership.Entities.dll
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\NorthWind.Membership.Entities\obj\Release\net8.0\refint\NorthWind.Membership.Entities.dll
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\NorthWind.Membership.Entities\obj\Release\net8.0\NorthWind.Membership.Entities.pdb
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\NorthWind.Membership.Entities\obj\Release\net8.0\ref\NorthWind.Membership.Entities.dll

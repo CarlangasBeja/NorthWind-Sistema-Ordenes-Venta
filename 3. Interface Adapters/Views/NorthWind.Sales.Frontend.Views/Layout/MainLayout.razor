@@ -1,0 +1,96 @@
+@inherits NavMenuLayout
+@inject IJSRuntime JS
+
+<SectionContent SectionId="NavBarBrandSection">
+    <a class="navbar-brand nw-brand" href="/" aria-label="Ir al inicio de NorthWind">
+        <span class="nw-brand-mark">NW</span>
+        <span class="nw-brand-copy">
+            <strong>NorthWind</strong>
+            <small>Gestión de ventas</small>
+        </span>
+    </a>
+</SectionContent>
+
+<SectionContent SectionId="NavBarItemsSection">
+    <div class="nw-nav-caption">NAVEGACIÓN</div>
+
+    <NavMenuItem HRef="" Match="NavLinkMatch.All">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 2 8h.5v6.5a.5.5 0 0 0 .5.5h3.5a.5.5 0 0 0 .5-.5V10h2v4.5a.5.5 0 0 0 .5.5H13a.5.5 0 0 0 .5-.5V8h.5a.5.5 0 0 0 .354-.854z" />
+        </svg>
+        Inicio
+    </NavMenuItem>
+
+    <AuthorizeView>
+        <Authorized>
+            <div class="nw-nav-caption nw-nav-caption-spaced">VENTAS</div>
+
+            <NavMenuItem HRef="CreateOrder">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z" />
+                    <path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0M7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5" />
+                </svg>
+                Crear orden
+            </NavMenuItem>
+
+            <NavMenuItem HRef="invoices">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M4 0h8a2 2 0 0 1 2 2v12.5a.5.5 0 0 1-.777.416L12 14.101l-1.223.815a.5.5 0 0 1-.554 0L9 14.101l-1.223.815a.5.5 0 0 1-.554 0L6 14.101l-1.223.815A.5.5 0 0 1 4 14.5z" />
+                    <path d="M6 4.5A.5.5 0 0 1 6.5 4h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 6 4.5m0 2A.5.5 0 0 1 6.5 6h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 6 6.5m0 2A.5.5 0 0 1 6.5 8h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 6 8.5" />
+                </svg>
+                Consultar órdenes de venta
+            </NavMenuItem>
+        </Authorized>
+    </AuthorizeView>
+</SectionContent>
+
+<SectionContent SectionId="HeaderSection">
+    <div class="nw-topbar-context">
+        <span class="nw-topbar-mark"></span>
+        <span>Gestión comercial</span>
+    </div>
+
+    <button type="button" class="nw-theme-toggle" @onclick="ToggleThemeAsync" aria-label="Cambiar apariencia">
+        <span class="nw-theme-icon" aria-hidden="true">@(IsDarkTheme ? "☀" : "☾")</span>
+        <span class="nw-theme-copy">
+            <strong>@(IsDarkTheme ? "Modo claro" : "Modo oscuro")</strong>
+            <small>@(IsDarkTheme ? "Cambiar a fondo claro" : "Cambiar a fondo oscuro")</small>
+        </span>
+    </button>
+
+    <LoginDisplayComponent />
+</SectionContent>
+
+@((RenderFragment)(builder => base.BuildRenderTree(builder)))
+
+@code {
+    private bool IsDarkTheme;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        try
+        {
+            var theme = await JS.InvokeAsync<string>("northWindTheme.get");
+            IsDarkTheme = theme == "dark";
+            StateHasChanged();
+        }
+        catch
+        {
+            IsDarkTheme = false;
+        }
+    }
+
+    private async Task ToggleThemeAsync()
+    {
+        try
+        {
+            var theme = await JS.InvokeAsync<string>("northWindTheme.toggle");
+            IsDarkTheme = theme == "dark";
+        }
+        catch
+        {
+            IsDarkTheme = !IsDarkTheme;
+        }
+    }
+}

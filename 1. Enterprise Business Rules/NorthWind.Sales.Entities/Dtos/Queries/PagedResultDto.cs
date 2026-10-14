@@ -1,0 +1,23 @@
+namespace NorthWind.Sales.Entities.Dtos.Queries;
+
+public sealed class PagedResultDto<T>
+{
+    public PagedResultDto()
+    {
+    }
+
+    public PagedResultDto(IEnumerable<T> items, int page, int pageSize, int totalItems)
+    {
+        Items = items.ToArray();
+        Page = page;
+        PageSize = pageSize;
+        TotalItems = totalItems;
+        TotalPages = totalItems == 0 ? 0 : (int)Math.Ceiling(totalItems / (double)pageSize);
+    }
+
+    public IReadOnlyCollection<T> Items { get; init; } = Array.Empty<T>();
+    public int Page { get; init; }
+    public int PageSize { get; init; }
+    public int TotalItems { get; init; }
+    public int TotalPages { get; init; }
+}

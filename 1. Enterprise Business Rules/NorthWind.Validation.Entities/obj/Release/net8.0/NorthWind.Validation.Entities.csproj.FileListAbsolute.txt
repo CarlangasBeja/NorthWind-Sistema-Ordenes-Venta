@@ -1,0 +1,12 @@
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Validation.Entities\bin\Release\net8.0\NorthWind.Validation.Entities.deps.json
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Validation.Entities\bin\Release\net8.0\NorthWind.Validation.Entities.dll
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Validation.Entities\bin\Release\net8.0\NorthWind.Validation.Entities.pdb
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Validation.Entities\obj\Release\net8.0\NorthWind.Validation.Entities.csproj.AssemblyReference.cache
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Validation.Entities\obj\Release\net8.0\NorthWind.Validation.Entities.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Validation.Entities\obj\Release\net8.0\NorthWind.Validation.Entities.AssemblyInfoInputs.cache
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Validation.Entities\obj\Release\net8.0\NorthWind.Validation.Entities.AssemblyInfo.cs
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Validation.Entities\obj\Release\net8.0\NorthWind.Validation.Entities.csproj.CoreCompileInputs.cache
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Validation.Entities\obj\Release\net8.0\NorthWind.Validation.Entities.dll
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Validation.Entities\obj\Release\net8.0\refint\NorthWind.Validation.Entities.dll
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Validation.Entities\obj\Release\net8.0\NorthWind.Validation.Entities.pdb
+C:\Users\ASUS VIVOBOOK\Desktop\NorthWind\1. Enterprise Business Rules\NorthWind.Validation.Entities\obj\Release\net8.0\ref\NorthWind.Validation.Entities.dll
