@@ -6,7 +6,11 @@ internal class DomainTransaction : IDomainTransaction, IDisposable
     TransactionScope? TransactionScope;
     public void BeginTransaction()
     {
-        TransactionManager.ImplicitDistributedTransactions = true;
+        // En Fedora las transacciones distribuidas MSDTC no están disponibles.
+        // La transacción de órdenes usa una conexión SQL Server. La auditoría
+        // de la segunda base se escribe fuera de esta transacción.
+        if (OperatingSystem.IsWindows())
+            TransactionManager.ImplicitDistributedTransactions = true;
         TransactionScope = new TransactionScope(TransactionScopeOption.Required,
             new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
             TransactionScopeAsyncFlowOption.Enabled);

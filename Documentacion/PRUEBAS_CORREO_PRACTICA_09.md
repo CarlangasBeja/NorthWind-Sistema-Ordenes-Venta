@@ -1,15 +1,23 @@
-# Matriz de verificación — práctica 9 / evento de dominio
+# Matriz de pruebas — Prácticas 9, 11 y 12
 
-| Prueba | Entradas | ¿Se registra la orden? | ¿Se intenta enviar correo? |
-|:--|:--|:--:|:--:|
-| 01 | 1 producto distinto | Sí | No |
-| 02 | 3 productos distintos | Sí | No |
-| 03 | 4 productos distintos | Sí | Sí |
-| 04 | 5 productos distintos | Sí | Sí |
-| 05 | 4 renglones, 2 de ellos del mismo ID (3 distintos) | Sí, fusiona las cantidades | No |
-| 06 | 4 distintos pero stock insuficiente | No | No |
-| 07 | 4 distintos con contraseña Gmail inválida | Sí | Sí, falla y registra el error; la orden no se revierte |
+| Caso | Orden | Notificación | Persistencia |
+|---|---|---|---|
+| 01 | 1 producto distinto | No | Confirmada |
+| 02 | 3 productos distintos | No | Confirmada |
+| 03 | 4 productos distintos | Sí, automática | Confirmada solo si SMTP acepta |
+| 04 | 5 productos distintos | Sí, automática | Confirmada solo si SMTP acepta |
+| 05 | 4 líneas con un `ProductId` repetido (3 distintos) | No | Confirmada, cantidades fusionadas |
+| 06 | 4 productos y stock insuficiente | No | Rechazada |
+| 07 | 4 productos y token Resend inválido | SMTP rechazado | Rollback y auditoría `Creación de orden ... cancelada` |
 
-**Validaciones manuales:** confirme el `OrderId` en `Orders`, los IDs y cantidades en `OrderDetails`, el evento en la consola de Web API y, en casos 03–04, el mensaje *recibido realmente* en la cuenta configurada. La aceptación SMTP no equivale a confirmación de entrega.
+## Evidencias que debe capturar el estudiante
 
-**Estado de esta entrega:** verificada estáticamente; sin envío real ni compilación de .NET en este entorno. Las casillas no representan pruebas ejecutadas.
+1. Formulario de orden de 3 productos (sin correo).
+2. Formulario y confirmación de 4 productos diferentes.
+3. Gmail administrador: asunto de orden especial y detalle del correo real.
+4. Historial de Resend con la operación de envío.
+5. SQL: `Orders` y `OrderDetails` antes y después del éxito.
+6. Error SMTP simulado con token inválido (sin mostrar credenciales) y rollback comprobado en SQL.
+7. Tabla `NorthWindLogsDB.dbo.DomainLogs` con cancelación registrada.
+
+**Estas son pruebas previstas, no resultados ya ejecutados.** El paquete no contiene evidencias ficticias.
