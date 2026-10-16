@@ -3,6 +3,10 @@ set -Eeuo pipefail
 "$(dirname "$0")/01_verificar_fedora.sh"
 printf '\n=== SDK y sistema ===\n'
 dotnet --info | head -32
+printf '\n=== SDK .NET 10 ===\n'
+dotnet --list-sdks
+printf '\n=== Framework de los proyectos ===\n'
+grep -m1 '<TargetFramework>' '4. Frameworks And Drivers/UI/NorthWind.Sales.WebApi/NorthWind.Sales.WebApi.csproj' '4. Frameworks And Drivers/UIs/NorthWind.Sales.BlazorClient/NorthWind.Sales.BlazorClient.csproj'
 printf '\n=== Contenedor de bases de datos ===\n'
 podman ps --filter name=northwind-sql --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
 printf '\n=== API ===\n'

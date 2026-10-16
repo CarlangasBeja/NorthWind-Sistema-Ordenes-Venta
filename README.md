@@ -3,7 +3,7 @@
 > **Prácticas 9 y 11 — aviso automático y transacción:** el proyecto envía notificaciones mediante Resend SMTP cuando una orden tiene **4 o más productos distintos**. Gmail únicamente recibe el aviso, sin formularios de correo para los usuarios. Ver [GUIA_RESEND_SIN_CAMBIOS_GMAIL.md](GUIA_RESEND_SIN_CAMBIOS_GMAIL.md) y ejecutar `Configurar-Resend.ps1` para guardar la API key de Resend fuera del repositorio.
 
 
-Proyecto académico en **.NET 8**, ASP.NET Core Web API, **Blazor WebAssembly** y **SQL Server LocalDB**, organizado por capas con enfoque de Clean Architecture. Esta versión reúne el código de NorthWind y los scripts de las **tres bases SQL** para que el repositorio de GitHub se pueda clonar y configurar en otro equipo.
+Proyecto académico en **.NET 10**, ASP.NET Core Web API, **Blazor WebAssembly** y **SQL Server**, organizado por capas con enfoque de Clean Architecture. Esta versión reúne el código de NorthWind y los scripts de las **tres bases SQL** para que el repositorio de GitHub se pueda clonar y configurar en otro equipo.
 
 ## Funcionalidades incluidas
 
@@ -51,12 +51,18 @@ Para crear las tres bases, ejecute en SQL Server LocalDB `BaseDeDatos/00_Crear_T
 ## Requisitos
 
 - Windows 10/11 y Visual Studio Community con desarrollo web ASP.NET y componentes de SQL Server, o las herramientas equivalentes.
-- SDK **.NET 8**.
-- SQL Server Express LocalDB (servidor `(localdb)\MSSQLLocalDB`).
+- SDK **.NET 10**.
+- SQL Server Express LocalDB en Windows (servidor `(localdb)\MSSQLLocalDB`) o SQL Server 2022 en Podman para Fedora.
 - Acceso a Internet en la primera restauración de paquetes NuGet.
 - Navegador moderno para el cliente Blazor WebAssembly.
 
-## Puesta en marcha paso a paso
+## Fedora Workstation 44 (.NET 10 y Blazor individual)
+
+Para la entrega individual en **Fedora Workstation 44**, use [Fedora44/README.md](Fedora44/README.md). Instale `dotnet-sdk-10.0`, Podman y ejecute los scripts `Fedora44/01_...` a `Fedora44/08_...`. Las tres bases se alojan en SQL Server 2022 dentro de Podman, porque SQL Server LocalDB no funciona en Linux. Ejecute también `./Fedora44/10_verificar_net10.sh` para comprobar el target de todos los proyectos.
+
+Las instrucciones siguientes describen el escenario **Windows opcional** (LocalDB); no sustituyen la ejecución y las evidencias en Fedora exigidas por el docente.
+
+## Puesta en marcha paso a paso (Windows opcional)
 
 1. Descargue y descomprima el repositorio, o clónelo con Git.
 2. Abra Visual Studio, conéctese en **SQL Server Object Explorer** a `(localdb)\MSSQLLocalDB`, y ejecute `BaseDeDatos/00_Crear_Todo_NorthWind.sql`.

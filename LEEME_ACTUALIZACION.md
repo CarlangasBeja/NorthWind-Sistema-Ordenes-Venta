@@ -25,4 +25,4 @@ Este paquete parte del `NorthWind.zip` compartido en esta conversación. Solo mo
 
 ## Verificación
 
-Se han inspeccionado el código y las rutas reales dentro del ZIP proporcionado; se verificaron la estructura del parche y sus referencias. **No fue posible compilar ni ejecutar el proyecto .NET 8 en este entorno**, por lo que corresponde hacer la prueba final en Visual Studio con la API y SQL Server disponibles.
+Se han inspeccionado el código y las rutas reales dentro del ZIP proporcionado; se verificaron la estructura del parche y sus referencias. **No fue posible compilar ni ejecutar el proyecto original .NET 8 en este entorno**, por lo que corresponde hacer la prueba final en Visual Studio con la API y SQL Server disponibles.

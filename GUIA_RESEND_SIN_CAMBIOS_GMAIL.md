@@ -12,7 +12,7 @@ Cuando el usuario registra una orden con **más de tres productos distintos** (4
 2. Usar SQL Server Object Explorer y conectarse a `(localdb)\MSSQLLocalDB`.
 3. Si las tres bases aún no existen, abrir y ejecutar `BaseDeDatos/00_Crear_Todo_NorthWind.sql`. **No recrear las bases si ya contienen tus órdenes**, para evitar reemplazar información.
 4. Verificar `NorthWindDB`, `NorthWindLogsDB` y `NorthWindUsersDB`.
-5. Tener instalado el SDK de .NET 8. Ejecutar en PowerShell, dentro de la carpeta que contiene `NorthWind.sln`:
+5. Tener instalado el SDK de .NET 10. Ejecutar en PowerShell, dentro de la carpeta que contiene `NorthWind.sln`:
 
 ```powershell
 dotnet restore .\NorthWind.sln

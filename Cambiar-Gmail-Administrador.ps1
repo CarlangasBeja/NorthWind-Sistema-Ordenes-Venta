@@ -4,7 +4,7 @@ $ErrorActionPreference = 'Stop'
 $apiProject = Join-Path $PSScriptRoot '4. Frameworks And Drivers\UI\NorthWind.Sales.WebApi\NorthWind.Sales.WebApi.csproj'
 
 if (-not (Get-Command dotnet -ErrorAction SilentlyContinue)) {
-    throw 'No se encontro dotnet. Es necesario el SDK de .NET 8.'
+    throw 'No se encontro dotnet. Es necesario el SDK de .NET 10.'
 }
 if (-not (Test-Path -LiteralPath $apiProject)) {
     throw "No se encontro el proyecto de la API: $apiProject"

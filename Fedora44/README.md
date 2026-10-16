@@ -1,11 +1,14 @@
 # NorthWind individual · Fedora Workstation 44 + Blazor WebAssembly
 
-Esta carpeta permite ejecutar la **versión Blazor del trabajo individual** de NorthWind sobre **Fedora Workstation 44 x86_64**, con API ASP.NET Core 8 y tres bases SQL Server 2022 dentro de un contenedor Podman.
+Esta carpeta permite ejecutar la **versión Blazor del trabajo individual** de NorthWind sobre **Fedora Workstation 44 x86_64**, con API ASP.NET Core 10 y tres bases SQL Server 2022 dentro de un contenedor Podman.
 
 ## Decisiones técnicas
 
+Esta edición de la entrega utiliza **.NET 10 LTS** en los **31 proyectos**, Blazor WASM 10, EF Core 10 y ASP.NET Core 10. No se requiere el SDK 8 para compilar la solución.
+
+
 - **Blazor WebAssembly** permanece como frontend del trabajo individual. **Astro no sustituye Blazor** si el docente exige específicamente Blazor.
-- Fedora 44 ejecuta `dotnet-sdk-8.0` desde sus repositorios.
+- Fedora 44 ejecuta `dotnet-sdk-10.0` desde sus repositorios.
 - **LocalDB es exclusivo de Windows**. En Fedora se usan `NorthWindDB`, `NorthWindLogsDB` y `NorthWindUsersDB` en SQL Server 2022 dentro de Podman.
 - Los scripts incluyen **10 productos y 10 clientes adicionales en español** como datos de demostración, sin copiar las órdenes que existan únicamente en LocalDB de Windows.
 - Las conexiones se escriben en **.NET User Secrets** local, no en `appsettings.json` ni GitHub.
@@ -17,7 +20,7 @@ Esta carpeta permite ejecutar la **versión Blazor del trabajo individual** de N
 - Fedora **Workstation 44** instalado, procesador **x86_64**. Se recomiendan al menos 8 GB de RAM para usar el escritorio, la API, Blazor y el contenedor, con más memoria si es máquina virtual.
 - Acceso a Internet para descargar paquetes NuGet e imagen de SQL Server.
 - Espacio libre para contenedores y paquetes; la imagen de SQL Server ocupa varios GB.
-- Entorno bash, `sudo`, Podman y .NET 8.
+- Entorno bash, `sudo`, Podman y .NET 10.
 
 ## Secuencia de ejecución (terminal Fedora)
 
@@ -37,6 +40,7 @@ Opcional: activar correo real con `./Fedora44/06_configurar_resend.sh` (requiere
 Compilar y restaurar dependencias:
 
 ```bash
+dotnet --list-sdks
 dotnet restore NorthWind.sln
 dotnet build NorthWind.sln
 ```
@@ -63,7 +67,7 @@ Si los puertos están ocupados, ciérrelos o cambie **ambas** direcciones: el sc
 ## Validaciones requeridas para la entrega
 
 1. `cat /etc/fedora-release` demuestra Fedora 44.
-2. `dotnet --info` muestra .NET 8.
+2. `dotnet --info` muestra .NET 10 y `dotnet --list-sdks` un SDK de la rama 10.
 3. `podman ps` muestra `northwind-sql` ejecutándose.
 4. Swagger abre en el navegador.
 5. Blazor abre con la cuenta de Identity creada con los scripts SQL, o una cuenta nueva registrada.
@@ -83,3 +87,11 @@ No suba al repositorio las claves de Resend, contraseñas `sa` ni secretos JWT. 
 - Un contenedor SQL Server 2022 ejecutado con Podman en Fedora es válido para realizar pruebas académicas locales, pero no equivale a una instalación nativa de SQL Server con soporte empresarial específico para Fedora.
 - En Linux no hay MSDTC para transacciones distribuidas. Se condicionó la propiedad `TransactionManager.ImplicitDistributedTransactions` para ejecutarse únicamente en Windows. La aplicación guarda la auditoría fuera de la transacción de la orden.
 - La cuenta de ejemplo del script de Identity se proporciona únicamente para prácticas; no debe utilizarse públicamente.
+
+## Validación obligatoria de .NET 10
+
+```bash
+./Fedora44/10_verificar_net10.sh
+```
+
+**Atención:** `net10.0` es el target; para ejecutar en Fedora se debe instalar `dotnet-sdk-10.0`. Las bibliotecas Microsoft ASP.NET Core, EF Core y Extensions se han alineado a `10.0.13`; las dependencias no Microsoft se mantienen cuando no exigen cambios. No se han generado nuevas migraciones de base de datos: los scripts SQL actuales se conservan.

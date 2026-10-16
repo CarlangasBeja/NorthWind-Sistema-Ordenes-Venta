@@ -10,6 +10,9 @@ Copie este directorio desde Windows a una carpeta personal de Fedora. Evite ruta
 
 ## 3. Instalación y arranque
 
+Se requiere **SDK .NET 10** (`sudo dnf install dotnet-sdk-10.0`). No utilizar `dotnet-sdk-8.0`. Todos los proyectos usan `<TargetFramework>net10.0</TargetFramework>` y los paquetes Microsoft se alinean con .NET 10.
+
+
 Siga `Fedora44/README.md` y ejecute los scripts numerados 01 a 05. Las credenciales se piden por teclado, sin colocarlas en los archivos del proyecto.
 
 ## 4. Comprobación de Blazor y API
@@ -22,10 +25,21 @@ Iniciar sesión, abrir Clientes, abrir Productos, crear una orden con uno o vari
 
 ## 6. Aspectos de la evaluación
 
-Documente con capturas verificables la versión de Fedora, .NET, el contenedor y las pantallas Blazor. Si el grupo debe tener una distribución o versión distinta, confirme con el docente que **Fedora Workstation 44 es la asignación de su grupo**, ya que el enunciado indica que individual y grupal deben usar la misma versión asignada.
+Documente con capturas verificables la versión de Fedora, .NET 10, el contenedor y las pantallas Blazor. Si el grupo debe tener una distribución o versión distinta, confirme con el docente que **Fedora Workstation 44 es la asignación de su grupo**, ya que el enunciado indica que individual y grupal deben usar la misma versión asignada.
 
 ## Referencias oficiales
 
 - Fedora Workstation: https://fedoraproject.org/workstation/download
 - .NET Fedora: https://learn.microsoft.com/dotnet/core/install/linux-fedora
 - SQL Server en contenedor: https://learn.microsoft.com/sql/linux/quickstart-install-connect-docker?view=sql-server-ver16
+
+## 7. Verificación adicional para .NET 10
+
+```bash
+dotnet --list-sdks
+./Fedora44/10_verificar_net10.sh
+dotnet restore NorthWind.sln
+dotnet build NorthWind.sln
+```
+
+Si hay mensajes NU1605/NU1107, conserve el log y compruebe que los paquetes Microsoft son `10.0.13` y Microsoft.IdentityModel.JsonWebTokens es `8.22.0`. Esta adaptación se ha verificado estructuralmente, pero necesita compilación y pruebas de ejecución en una Fedora 44 real.
