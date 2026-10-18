@@ -1,0 +1,74 @@
+<div class="nw-auth-page">
+  <section class="nw-auth-shell nw-auth-shell-wide">
+    <div class="nw-auth-form-panel">
+      <span class="nw-kicker">ACCESO SEGURO</span>
+      <h1>Bienvenido de nuevo</h1>
+      <p class="text-secondary mb-4">Ingrese sus credenciales para acceder a las operaciones de venta de NorthWind.</p>
+
+      @if (errorMessage()) {
+        <div class="nw-feedback nw-feedback-danger" role="alert">
+          <div class="nw-feedback-icon">×</div>
+          <div class="nw-feedback-body"><strong>No pudimos iniciar sesión</strong><p>{{ errorMessage() }}</p></div>
+        </div>
+      }
+
+      <form (ngSubmit)="login()" novalidate>
+        @if (!errors().isEmpty) {
+          <ul class="validation-errors nw-validation-summary">
+            @for (message of errors().all; track message) {
+              <li class="validation-message">{{ message }}</li>
+            }
+          </ul>
+        }
+
+        <div class="form-group">
+          <label for="Email" class="form-label fw-semibold">Correo electrónico <span class="nw-required">*</span></label>
+          <input id="Email" name="email" class="form-control form-control-lg" autocomplete="email" inputmode="email"
+                 placeholder="nombre@ejemplo.com" [(ngModel)]="email" (ngModelChange)="onFieldChange()" />
+          @for (message of errors().for('Email'); track message) {
+            <div class="validation-message">{{ message }}</div>
+          }
+          <div class="form-text">Use el mismo correo con el que creó su cuenta.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="Password" class="form-label fw-semibold">Contraseña <span class="nw-required">*</span></label>
+          <div class="input-group input-group-lg">
+            <input id="Password" name="password" class="form-control" autocomplete="current-password"
+                   placeholder="Ingrese su contraseña" [type]="showPassword ? 'text' : 'password'"
+                   [(ngModel)]="password" (ngModelChange)="onFieldChange()" />
+            <button class="btn btn-outline-secondary" type="button" (click)="showPassword = !showPassword">
+              {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+            </button>
+          </div>
+          @for (message of errors().for('Password'); track message) {
+            <div class="validation-message">{{ message }}</div>
+          }
+        </div>
+
+        <button class="btn btn-primary btn-lg w-100 nw-submit-button" [disabled]="isBusy()">
+          @if (isBusy()) {
+            <span class="nw-spinner nw-spinner-light" aria-hidden="true"></span>
+            <span>Verificando datos...</span>
+          } @else {
+            <span>Iniciar sesión</span>
+          }
+        </button>
+      </form>
+
+      <div class="nw-auth-links">
+        <span class="text-secondary">¿Todavía no tiene una cuenta?</span>
+        <a routerLink="/user/register">Crear cuenta</a>
+      </div>
+    </div>
+
+    <aside class="nw-auth-info-panel">
+      <div class="nw-auth-info-icon">NW</div>
+      <h2>Acceso a Gestión de Ventas</h2>
+      <p>Su sesión protege las operaciones que modifican inventario y generan órdenes de venta.</p>
+      <div class="nw-auth-benefit"><span>✓</span><div><strong>Acceso autenticado</strong><small>Las operaciones de venta requieren una sesión válida.</small></div></div>
+      <div class="nw-auth-benefit"><span>✓</span><div><strong>Datos protegidos</strong><small>El frontend se comunica con el backend mediante servicios REST.</small></div></div>
+      <div class="nw-auth-benefit"><span>✓</span><div><strong>Mensajes claros</strong><small>Si algo falla, el sistema indica qué puede revisar y cómo continuar.</small></div></div>
+    </aside>
+  </section>
+</div>

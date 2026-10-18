@@ -1,0 +1,272 @@
+<div class="nw-page-heading">
+  <div>
+    <span class="nw-kicker">HISTORIAL DE VENTAS</span>
+    <h1>Consultar órdenes de venta</h1>
+    <p>Localice una orden de venta con filtros precisos, revise su detalle y genere un comprobante profesional.</p>
+  </div>
+  <a class="btn btn-primary nw-btn-icon" routerLink="/createorder"><span aria-hidden="true">＋</span>Nueva orden</a>
+</div>
+
+@if (informationMessage()) {
+  <div class="nw-feedback nw-feedback-success" role="status">
+    <div class="nw-feedback-icon">✓</div>
+    <div class="nw-feedback-body"><strong>Operación completada</strong><p>{{ informationMessage() }}</p></div>
+    <button type="button" class="nw-feedback-close" (click)="clearMessages()" aria-label="Cerrar notificación">×</button>
+    <span class="nw-toast-progress" aria-hidden="true"></span>
+  </div>
+}
+
+@if (errorMessage()) {
+  <div class="nw-feedback nw-feedback-danger" role="alert">
+    <div class="nw-feedback-icon">×</div>
+    <div class="nw-feedback-body">
+      <strong>No pudimos completar la operación</strong>
+      <p>{{ errorMessage() }}</p>
+      <button type="button" class="btn btn-sm btn-outline-danger mt-2" (click)="retry()">Reintentar</button>
+    </div>
+    <button type="button" class="nw-feedback-close" (click)="clearMessages()" aria-label="Cerrar notificación">×</button>
+    <span class="nw-toast-progress" aria-hidden="true"></span>
+  </div>
+}
+
+<section class="nw-card mb-4 nw-invoice-search-card">
+  <div class="nw-card-header nw-card-header-actions">
+    <div>
+      <span class="nw-step">01</span>
+      <div>
+        <h2>Localizar orden de venta</h2>
+        <p>Seleccione un criterio para evitar resultados ambiguos.</p>
+      </div>
+    </div>
+    @if (result(); as page) {
+      <span class="nw-status-pill nw-status-neutral">{{ page.totalItems }} orden(es)</span>
+    }
+  </div>
+
+  <div class="nw-filter-panel nw-filter-panel-page">
+    <div class="nw-filter-heading">
+      <div>
+        <strong>Filtro de búsqueda</strong>
+        <span>Puede cambiar de criterio en cualquier momento.</span>
+      </div>
+      <button type="button" class="btn btn-sm btn-outline-secondary" (click)="clearSearch()" [disabled]="isLoading()">Restablecer</button>
+    </div>
+
+    <div class="nw-filter-options nw-filter-options-invoices" role="group" aria-label="Criterio para consultar órdenes de venta">
+      <button type="button" class="nw-filter-chip" [class.is-active]="searchField() === 'all'" (click)="changeField('all')">
+        <span class="nw-filter-chip-icon">⌕</span>
+        <span><strong>Todos</strong><small>Búsqueda flexible</small></span>
+      </button>
+      <button type="button" class="nw-filter-chip" [class.is-active]="searchField() === 'invoice'" (click)="changeField('invoice')">
+        <span class="nw-filter-chip-icon">№</span>
+        <span><strong>N.º de orden</strong><small>INV-000001</small></span>
+      </button>
+      <button type="button" class="nw-filter-chip" [class.is-active]="searchField() === 'customercode'" (click)="changeField('customercode')">
+        <span class="nw-filter-chip-icon">#</span>
+        <span><strong>Código cliente</strong><small>Ej.: ALFKI</small></span>
+      </button>
+      <button type="button" class="nw-filter-chip" [class.is-active]="searchField() === 'customername'" (click)="changeField('customername')">
+        <span class="nw-filter-chip-icon">Aa</span>
+        <span><strong>Nombre cliente</strong><small>Nombre parcial</small></span>
+      </button>
+    </div>
+
+    <div class="nw-smart-search-row nw-smart-search-row-page">
+      <div class="nw-search-input-wrap">
+        <span class="nw-search-input-icon">⌕</span>
+        <input class="form-control form-control-lg" [value]="searchText()" (input)="onSearchInput($event)"
+               (keydown)="onSearchKeyDown($event)" [placeholder]="searchPlaceholder" aria-label="Consultar órdenes de venta" />
+        @if (searchText().trim()) {
+          <button type="button" class="nw-input-clear" (click)="clearText()" aria-label="Limpiar texto">×</button>
+        }
+      </div>
+      <button type="button" class="btn btn-primary px-4" (click)="search()" [disabled]="isLoading()">
+        {{ isLoading() ? 'Consultando...' : 'Buscar orden' }}
+      </button>
+    </div>
+
+    <div class="nw-filter-help">
+      <span class="nw-info-icon">i</span>
+      <span>{{ searchHelp }}</span>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="nw-loading-block mt-3">
+      <span class="nw-spinner" aria-hidden="true"></span>
+      <strong>Consultando órdenes de venta...</strong>
+      <span>Estamos recuperando las órdenes registradas.</span>
+    </div>
+  } @else if (!errorMessage()) {
+    @let page = result();
+    @if (!page || page.items.length === 0) {
+      <div class="nw-empty-block mt-3">
+        <div class="nw-empty-icon">▤</div>
+        <strong>No encontramos órdenes de venta</strong>
+        <span>{{ emptyMessage }}</span>
+      </div>
+    } @else {
+      <div class="nw-result-meta mt-2">
+        <span><strong>{{ page.totalItems }}</strong> resultado(s) · más recientes primero</span>
+        <span>Página {{ page.page }} de {{ max(page.totalPages, 1) }}</span>
+      </div>
+
+      <div class="table-responsive nw-table-shell nw-invoice-table-shell">
+        <table class="table table-hover align-middle nw-data-table mb-0">
+          <thead>
+            <tr>
+              <th>Orden</th>
+              <th>Fecha</th>
+              <th>Cliente</th>
+              <th class="text-end">Subtotal</th>
+              <th class="text-end">IVA</th>
+              <th class="text-end">Total</th>
+              <th class="text-end">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (invoice of page.items; track invoice.orderId) {
+              <tr>
+                <td data-label="Orden"><span class="nw-code-chip">{{ invoice.invoiceNumber }}</span></td>
+                <td data-label="Fecha">
+                  <strong>{{ shortDate(invoice.orderDate) }}</strong>
+                  <small class="d-block text-secondary">{{ time(invoice.orderDate) }}</small>
+                </td>
+                <td data-label="Cliente">
+                  <strong>{{ invoice.customerName }}</strong>
+                  <small class="d-block text-secondary">{{ invoice.customerId }}</small>
+                </td>
+                <td data-label="Subtotal" class="text-end">{{ money(invoice.subtotal) }}</td>
+                <td data-label="IVA" class="text-end">{{ money(invoice.tax) }}</td>
+                <td data-label="Total" class="text-end"><strong class="nw-money-emphasis">{{ money(invoice.total) }}</strong></td>
+                <td data-label="Acción" class="text-end">
+                  <button type="button" class="btn btn-sm btn-outline-primary nw-btn-icon" (click)="openInvoice(invoice.orderId)" [disabled]="isInvoiceLoading()">
+                    <span aria-hidden="true">▣</span>Ver orden de venta generada
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="nw-pagination">
+        <button type="button" class="btn btn-outline-secondary" [disabled]="page.page <= 1 || isLoading()" (click)="previousPage()">← Anterior</button>
+        <span>Página <strong>{{ page.page }}</strong> de <strong>{{ max(page.totalPages, 1) }}</strong> · {{ page.totalItems }} resultado(s)</span>
+        <button type="button" class="btn btn-outline-secondary" [disabled]="page.page >= page.totalPages || isLoading()" (click)="nextPage()">Siguiente →</button>
+      </div>
+    }
+  }
+</section>
+
+@if (isInvoiceLoading()) {
+  <div class="nw-modal-backdrop">
+    <section class="nw-modal nw-confirm-modal" role="status" aria-live="polite">
+      <span class="nw-spinner" aria-hidden="true"></span>
+      <h2>Preparando orden de venta</h2>
+      <p>Estamos cargando los productos, datos de entrega y totales.</p>
+    </section>
+  </div>
+}
+
+@if (showInvoiceModal() && selectedInvoice(); as invoice) {
+  <div class="nw-modal-backdrop">
+    <section class="nw-modal nw-invoice-detail-modal" role="dialog" aria-modal="true" aria-labelledby="invoiceDetailTitle">
+      <header class="nw-modal-header nw-invoice-modal-header">
+        <div class="nw-invoice-modal-title">
+          <span class="nw-invoice-badge">ORDEN</span>
+          <div>
+            <h2 id="invoiceDetailTitle">{{ invoice.invoiceNumber }}</h2>
+            <p>Emitida el {{ issuedAt(invoice) }}</p>
+          </div>
+        </div>
+        <button type="button" class="nw-icon-button" (click)="closeInvoiceModal()" aria-label="Cerrar orden de venta">×</button>
+      </header>
+
+      <div class="nw-modal-body nw-invoice-modal-body">
+        <div class="nw-invoice-identity-strip">
+          <div>
+            <span>Cliente</span>
+            <strong>{{ invoice.customerName }}</strong>
+            <small>{{ invoice.customerId }}</small>
+          </div>
+          <div>
+            <span>Entrega</span>
+            <strong>{{ invoice.shipAddress }}</strong>
+            <small>{{ invoice.shipCity }}, {{ invoice.shipCountry }} {{ invoice.shipPostalCode ?? '' }}</small>
+          </div>
+          <div>
+            <span>Contenido</span>
+            <strong>{{ totalUnits(invoice) }} unidad(es)</strong>
+            <small>{{ invoice.details.length }} línea(s) de producto</small>
+          </div>
+        </div>
+
+        <div class="table-responsive nw-table-shell mt-3">
+          <table class="table align-middle nw-data-table mb-0">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Producto</th>
+                <th class="text-end">Precio</th>
+                <th class="text-end">Cantidad</th>
+                <th class="text-end">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (detail of invoice.details; track detail.productId) {
+                <tr>
+                  <td data-label="ID"><span class="nw-code-chip">#{{ detail.productId }}</span></td>
+                  <td data-label="Producto"><strong>{{ detail.productName }}</strong></td>
+                  <td data-label="Precio" class="text-end">{{ money(detail.unitPrice) }}</td>
+                  <td data-label="Cantidad" class="text-end">{{ detail.quantity }}</td>
+                  <td data-label="Subtotal" class="text-end"><strong>{{ money(detail.subtotal) }}</strong></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="nw-invoice-footer nw-invoice-modal-footer">
+          <div class="nw-security-note">
+            <span aria-hidden="true">✓</span>
+            <p>Comprobante reconstruido desde la orden almacenada. Los valores mostrados corresponden a la venta registrada.</p>
+          </div>
+          <div class="nw-invoice-totals">
+            <div><span>Subtotal</span><strong>{{ money(invoice.subtotal) }}</strong></div>
+            <div><span>IVA (15%)</span><strong>{{ money(invoice.tax) }}</strong></div>
+            <div class="nw-grand-total"><span>Total</span><strong>{{ money(invoice.total) }}</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="nw-modal-footer nw-invoice-actions">
+        <button type="button" class="btn btn-primary nw-btn-icon" (click)="viewPdf()" [disabled]="isPdfLoading()"><span>▣</span>{{ isPdfLoading() ? 'Preparando...' : 'Ver PDF' }}</button>
+        <button type="button" class="btn btn-outline-primary nw-btn-icon" (click)="downloadPdf()" [disabled]="isPdfLoading()"><span>↓</span>Descargar</button>
+        <button type="button" class="btn btn-outline-primary nw-btn-icon" (click)="printPdf()" [disabled]="isPdfLoading()"><span>⌑</span>Imprimir</button>
+      </footer>
+    </section>
+  </div>
+}
+
+@if (showPdfViewer() && pdfViewerUrl(); as pdfUrl) {
+  <div class="nw-modal-backdrop nw-modal-backdrop-top">
+    <section class="nw-modal nw-pdf-modal" role="dialog" aria-modal="true" aria-labelledby="pdfViewerTitle">
+      <header class="nw-modal-header nw-pdf-toolbar">
+        <div>
+          <span class="nw-kicker">VISTA PREVIA DEL COMPROBANTE</span>
+          <h2 id="pdfViewerTitle">{{ selectedInvoice()?.invoiceNumber }}</h2>
+          <p>Revise el documento antes de imprimirlo o descargarlo.</p>
+        </div>
+        <div class="nw-pdf-toolbar-actions">
+          <button type="button" class="btn btn-sm btn-outline-primary nw-btn-icon" (click)="printPdf()"><span>⌑</span>Imprimir</button>
+          <button type="button" class="btn btn-sm btn-primary nw-btn-icon" (click)="downloadPdf()"><span>↓</span>Descargar</button>
+          <button type="button" class="nw-icon-button" (click)="closePdfViewer()" aria-label="Cerrar visor PDF">×</button>
+        </div>
+      </header>
+      <div class="nw-pdf-viewer">
+        <iframe [src]="pdfUrl" title="Vista previa de la orden de venta en PDF"></iframe>
+      </div>
+    </section>
+  </div>
+}

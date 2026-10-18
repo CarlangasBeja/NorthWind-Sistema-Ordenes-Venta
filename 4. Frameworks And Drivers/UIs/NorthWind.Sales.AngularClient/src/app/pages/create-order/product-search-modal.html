@@ -1,0 +1,138 @@
+@if (isOpen()) {
+  <div class="nw-modal-backdrop" role="presentation">
+    <section class="nw-modal nw-search-modal" role="dialog" aria-modal="true" aria-labelledby="productSearchTitle">
+      <header class="nw-modal-header">
+        <div>
+          <span class="nw-kicker">CATÁLOGO INTELIGENTE</span>
+          <h2 id="productSearchTitle">Seleccionar producto</h2>
+          <p>Filtre por ID o nombre. Solo se muestran productos con stock disponible.</p>
+        </div>
+        <button type="button" class="nw-icon-button" (click)="close()" aria-label="Cerrar ventana">×</button>
+      </header>
+
+      <div class="nw-modal-body">
+        <div class="nw-filter-panel">
+          <div class="nw-filter-heading">
+            <div>
+              <strong>Buscar por</strong>
+              <span>Seleccione el dato que conoce del producto.</span>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-secondary" (click)="clearSearch()" [disabled]="isLoading()">Limpiar filtros</button>
+          </div>
+
+          <div class="nw-filter-options" role="group" aria-label="Criterio de búsqueda de productos">
+            <button type="button" class="nw-filter-chip" [class.is-active]="searchField() === 'id'" (click)="changeField('id')">
+              <span class="nw-filter-chip-icon">#</span>
+              <span><strong>ID</strong><small>Ej.: 1</small></span>
+            </button>
+            <button type="button" class="nw-filter-chip" [class.is-active]="searchField() === 'name'" (click)="changeField('name')">
+              <span class="nw-filter-chip-icon">Aa</span>
+              <span><strong>Nombre</strong><small>Ej.: Chai</small></span>
+            </button>
+            <button type="button" class="nw-filter-chip" [class.is-active]="searchField() === 'all'" (click)="changeField('all')">
+              <span class="nw-filter-chip-icon">⌕</span>
+              <span><strong>Cualquier dato</strong><small>Búsqueda flexible</small></span>
+            </button>
+          </div>
+
+          <div class="nw-smart-search-row">
+            <div class="nw-search-input-wrap">
+              <span class="nw-search-input-icon">⌕</span>
+              <input class="form-control form-control-lg" [value]="searchText()" (input)="onSearchInput($event)"
+                     (keydown)="onSearchKeyDown($event)" [attr.inputmode]="searchField() === 'id' ? 'numeric' : 'text'"
+                     [placeholder]="searchPlaceholder" aria-label="Buscar producto" />
+              @if (searchText().trim()) {
+                <button type="button" class="nw-input-clear" (click)="clearText()" aria-label="Limpiar texto">×</button>
+              }
+            </div>
+            <button type="button" class="btn btn-primary px-4" (click)="search()" [disabled]="isLoading()">
+              {{ isLoading() ? 'Buscando...' : 'Buscar producto' }}
+            </button>
+          </div>
+
+          <div class="nw-filter-help">
+            <span class="nw-info-icon">i</span>
+            <span>{{ searchHelp }}</span>
+          </div>
+        </div>
+
+        @if (errorMessage()) {
+          <div class="nw-feedback nw-feedback-danger mt-3" role="alert">
+            <div class="nw-feedback-icon">×</div>
+            <div class="nw-feedback-body">
+              <strong>No pudimos consultar los productos</strong>
+              <p>{{ errorMessage() }}</p>
+              <button type="button" class="btn btn-sm btn-outline-danger mt-2" (click)="search()">Reintentar</button>
+            </div>
+          </div>
+        }
+
+        @if (isLoading()) {
+          <div class="nw-loading-block mt-3">
+            <span class="nw-spinner" aria-hidden="true"></span>
+            <strong>Consultando productos...</strong>
+            <span>Estamos verificando precio y stock disponible.</span>
+          </div>
+        } @else if (!errorMessage()) {
+          @let page = result();
+          @if (!page || page.items.length === 0) {
+            <div class="nw-empty-block mt-3">
+              <div class="nw-empty-icon">⌕</div>
+              <strong>No encontramos productos disponibles</strong>
+              <span>{{ emptyMessage }}</span>
+            </div>
+          } @else {
+            <div class="nw-result-meta">
+              <span><strong>{{ page.totalItems }}</strong> producto(s) disponible(s)</span>
+              <span>Página {{ page.page }} de {{ max(page.totalPages, 1) }}</span>
+            </div>
+
+            <div class="table-responsive nw-table-shell">
+              <table class="table table-hover align-middle nw-data-table mb-0">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>Precio unitario</th>
+                    <th>Disponibilidad</th>
+                    <th class="text-end">Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (product of page.items; track product.id) {
+                    <tr [class.nw-row-muted]="isExcluded(product)">
+                      <td data-label="ID"><span class="nw-code-chip">#{{ product.id }}</span></td>
+                      <td data-label="Producto"><strong>{{ product.name }}</strong></td>
+                      <td data-label="Precio"><strong>{{ money(product.unitPrice) }}</strong></td>
+                      <td data-label="Stock">
+                        @if (product.unitsInStock <= 5) {
+                          <span class="nw-status-pill nw-status-warning">Stock bajo · {{ product.unitsInStock }} unidad(es)</span>
+                          <small class="nw-cell-note">Verifique la cantidad antes de agregarlo.</small>
+                        } @else {
+                          <span class="nw-status-pill nw-status-success">{{ product.unitsInStock }} unidades disponibles</span>
+                        }
+                      </td>
+                      <td data-label="Acción" class="text-end">
+                        @if (isExcluded(product)) {
+                          <button type="button" class="btn btn-sm btn-light" disabled title="Este producto ya está incluido en la orden.">Ya agregado</button>
+                        } @else {
+                          <button type="button" class="btn btn-sm btn-primary" (click)="select(product)">Seleccionar</button>
+                        }
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            <div class="nw-pagination">
+              <button type="button" class="btn btn-outline-secondary" [disabled]="page.page <= 1 || isLoading()" (click)="previousPage()">← Anterior</button>
+              <span>Mostrando página <strong>{{ page.page }}</strong> de <strong>{{ max(page.totalPages, 1) }}</strong></span>
+              <button type="button" class="btn btn-outline-secondary" [disabled]="page.page >= page.totalPages || isLoading()" (click)="nextPage()">Siguiente →</button>
+            </div>
+          }
+        }
+      </div>
+    </section>
+  </div>
+}

@@ -1,0 +1,122 @@
+<div class="nw-auth-page">
+  <section class="nw-auth-shell nw-auth-shell-wide">
+    <div class="nw-auth-form-panel">
+      <span class="nw-kicker">REGISTRO DE USUARIO</span>
+      <h1>Crear una cuenta</h1>
+      <p class="text-secondary mb-4">Complete sus datos. Los campos marcados con * son obligatorios.</p>
+
+      @if (informationMessage()) {
+        <div class="nw-feedback nw-feedback-success" role="status">
+          <div class="nw-feedback-icon">✓</div>
+          <div class="nw-feedback-body">
+            <strong>Cuenta creada correctamente</strong>
+            <p>{{ informationMessage() }}</p>
+            <a class="btn btn-sm btn-success mt-2" routerLink="/user/login">Ir a iniciar sesión</a>
+          </div>
+          <button type="button" class="nw-feedback-close" (click)="clearMessages()" aria-label="Cerrar mensaje">×</button>
+        </div>
+      }
+
+      @if (errorMessage()) {
+        <div class="nw-feedback nw-feedback-danger" role="alert">
+          <div class="nw-feedback-icon">×</div>
+          <div class="nw-feedback-body"><strong>No pudimos crear la cuenta</strong><p>{{ errorMessage() }}</p></div>
+          <button type="button" class="nw-feedback-close" (click)="clearMessages()" aria-label="Cerrar mensaje">×</button>
+        </div>
+      }
+
+      <form (ngSubmit)="register()" novalidate>
+        @if (!errors().isEmpty) {
+          <ul class="validation-errors nw-validation-summary">
+            @for (message of errors().all; track message) {
+              <li class="validation-message">{{ message }}</li>
+            }
+          </ul>
+        }
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="FirstName" class="form-label fw-semibold">Nombres <span class="nw-required">*</span></label>
+            <input id="FirstName" name="firstName" class="form-control" autocomplete="given-name" maxlength="80"
+                   placeholder="Ej.: Carlos" [(ngModel)]="firstName" (ngModelChange)="onFieldChange()" />
+            @for (message of errors().for('FirstName'); track message) {
+              <div class="validation-message">{{ message }}</div>
+            }
+          </div>
+          <div class="col-md-6">
+            <label for="LastName" class="form-label fw-semibold">Apellidos <span class="nw-required">*</span></label>
+            <input id="LastName" name="lastName" class="form-control" autocomplete="family-name" maxlength="80"
+                   placeholder="Ej.: Bejarano" [(ngModel)]="lastName" (ngModelChange)="onFieldChange()" />
+            @for (message of errors().for('LastName'); track message) {
+              <div class="validation-message">{{ message }}</div>
+            }
+          </div>
+          <div class="col-12">
+            <label for="Email" class="form-label fw-semibold">Correo electrónico <span class="nw-required">*</span></label>
+            <input id="Email" name="email" class="form-control" autocomplete="email" inputmode="email"
+                   placeholder="nombre@ejemplo.com" [(ngModel)]="email" (ngModelChange)="onFieldChange()" />
+            @for (message of errors().for('Email'); track message) {
+              <div class="validation-message">{{ message }}</div>
+            }
+            <div class="form-text">Este correo se utilizará para iniciar sesión.</div>
+          </div>
+          <div class="col-md-6">
+            <label for="Password" class="form-label fw-semibold">Contraseña <span class="nw-required">*</span></label>
+            <input id="Password" name="password" class="form-control" autocomplete="new-password"
+                   [type]="showPassword ? 'text' : 'password'" placeholder="Cree una contraseña segura"
+                   [(ngModel)]="password" (ngModelChange)="onFieldChange()" />
+            @for (message of errors().for('Password'); track message) {
+              <div class="validation-message">{{ message }}</div>
+            }
+          </div>
+          <div class="col-md-6">
+            <label for="PasswordConfirmation" class="form-label fw-semibold">Confirmar contraseña <span class="nw-required">*</span></label>
+            <div class="input-group">
+              <input id="PasswordConfirmation" name="passwordConfirmation" class="form-control" autocomplete="new-password"
+                     [type]="showPassword ? 'text' : 'password'" placeholder="Repita la contraseña"
+                     [(ngModel)]="passwordConfirmation" (ngModelChange)="onFieldChange()" />
+              <button class="btn btn-outline-secondary" type="button" (click)="showPassword = !showPassword">
+                {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+              </button>
+            </div>
+            @for (message of errors().for('PasswordConfirmation'); track message) {
+              <div class="validation-message">{{ message }}</div>
+            }
+          </div>
+        </div>
+
+        <div class="nw-password-rules">
+          <strong>La contraseña debe cumplir:</strong>
+          <div class="nw-password-rule" [class.is-ok]="hasMinimumLength"><span>{{ hasMinimumLength ? '✓' : '·' }}</span>Al menos 6 caracteres</div>
+          <div class="nw-password-rule" [class.is-ok]="hasUppercase"><span>{{ hasUppercase ? '✓' : '·' }}</span>Una letra mayúscula</div>
+          <div class="nw-password-rule" [class.is-ok]="hasLowercase"><span>{{ hasLowercase ? '✓' : '·' }}</span>Una letra minúscula</div>
+          <div class="nw-password-rule" [class.is-ok]="hasDigit"><span>{{ hasDigit ? '✓' : '·' }}</span>Un número</div>
+          <div class="nw-password-rule" [class.is-ok]="hasSpecial"><span>{{ hasSpecial ? '✓' : '·' }}</span>Un carácter especial</div>
+          <div class="nw-password-rule" [class.is-ok]="passwordsMatch"><span>{{ passwordsMatch ? '✓' : '·' }}</span>Las dos contraseñas coinciden</div>
+        </div>
+
+        <button class="btn btn-primary btn-lg w-100 nw-submit-button" [disabled]="isBusy()">
+          @if (isBusy()) {
+            <span class="nw-spinner nw-spinner-light" aria-hidden="true"></span><span>Creando cuenta...</span>
+          } @else {
+            <span>Crear cuenta</span>
+          }
+        </button>
+      </form>
+
+      <div class="nw-auth-links">
+        <span class="text-secondary">¿Ya tiene una cuenta?</span>
+        <a routerLink="/user/login">Iniciar sesión</a>
+      </div>
+    </div>
+
+    <aside class="nw-auth-info-panel">
+      <div class="nw-auth-info-icon">NW</div>
+      <h2>Una cuenta para operar con seguridad</h2>
+      <p>El registro habilita el acceso al punto de venta y permite asociar las operaciones al usuario autenticado.</p>
+      <div class="nw-auth-benefit"><span>✓</span><div><strong>Validación inmediata</strong><small>El formulario muestra exactamente qué dato necesita corregirse.</small></div></div>
+      <div class="nw-auth-benefit"><span>✓</span><div><strong>Contraseña controlada</strong><small>Los requisitos se muestran mientras completa el formulario.</small></div></div>
+      <div class="nw-auth-benefit"><span>✓</span><div><strong>Correo único</strong><small>El sistema evita registrar dos cuentas con el mismo correo.</small></div></div>
+    </aside>
+  </section>
+</div>

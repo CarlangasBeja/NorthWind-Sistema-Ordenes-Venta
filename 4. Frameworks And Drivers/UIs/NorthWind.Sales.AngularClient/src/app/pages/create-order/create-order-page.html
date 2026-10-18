@@ -1,0 +1,367 @@
+<div class="nw-page-heading">
+  <div>
+    <span class="nw-kicker">PUNTO DE VENTA</span>
+    <h1>Nueva orden de venta</h1>
+    <p>Registre una venta de forma segura. El sistema valida cliente, stock, cantidades y totales antes de guardar.</p>
+  </div>
+  <a class="btn btn-outline-secondary nw-btn-icon" routerLink="/invoices">
+    <span aria-hidden="true">⌕</span>
+    Consultar órdenes de venta
+  </a>
+</div>
+
+<div class="nw-progress-strip mb-4">
+  <div class="nw-progress-item" [class.is-complete]="order.hasSelectedCustomer()">
+    <span class="nw-progress-number">1</span>
+    <span><strong>Cliente</strong><small>{{ order.hasSelectedCustomer() ? 'Seleccionado' : 'Pendiente' }}</small></span>
+  </div>
+  <div class="nw-progress-line" [class.is-complete]="order.hasProducts()"></div>
+  <div class="nw-progress-item" [class.is-complete]="order.hasProducts()">
+    <span class="nw-progress-number">2</span>
+    <span><strong>Productos</strong><small>{{ order.hasProducts() ? order.orderDetails().length + ' agregado(s)' : 'Pendiente' }}</small></span>
+  </div>
+  <div class="nw-progress-line" [class.is-complete]="order.canAttemptSave()"></div>
+  <div class="nw-progress-item" [class.is-complete]="order.hasSavedOrder()">
+    <span class="nw-progress-number">3</span>
+    <span><strong>Confirmación</strong><small>{{ order.hasSavedOrder() ? 'Orden guardada' : 'Revisar y guardar' }}</small></span>
+  </div>
+</div>
+
+@if (feedback(); as toast) {
+  <div class="nw-feedback nw-feedback-{{ toast.type }}" [attr.role]="toast.type === 'danger' ? 'alert' : 'status'" aria-live="polite">
+    <div class="nw-feedback-icon">{{ toast.icon }}</div>
+    <div class="nw-feedback-body">
+      <strong>{{ toast.title }}</strong>
+      <p>{{ toast.message }}</p>
+      @if (toast.type === 'success' && order.lastOrderId()) {
+        <div class="d-flex flex-wrap gap-2 mt-2">
+          <a class="btn btn-sm btn-success" routerLink="/invoices" [queryParams]="{ orderId: order.lastOrderId() }">Ver orden de venta generada</a>
+          <button type="button" class="btn btn-sm btn-outline-success" (click)="startNewOrder()">Crear otra orden</button>
+        </div>
+      }
+    </div>
+    <button type="button" class="nw-feedback-close" (click)="order.clearMessages()" aria-label="Cerrar notificación">×</button>
+    <span class="nw-toast-progress" aria-hidden="true"></span>
+  </div>
+}
+
+<form (ngSubmit)="requestSave()" novalidate>
+  <div class="nw-order-grid">
+    <div class="nw-order-main">
+      <section class="nw-card mb-4">
+        <div class="nw-card-header">
+          <div>
+            <span class="nw-step">01</span>
+            <div>
+              <h2>Cliente y entrega</h2>
+              <p>Seleccione un cliente habilitado y complete los datos donde se entregará la compra.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-lg-4">
+            <label class="form-label fw-semibold">ID del cliente <span class="nw-required">*</span></label>
+            <div class="input-group">
+              <input class="form-control" [value]="order.customerId()" readonly />
+              <button type="button" class="btn btn-primary" (click)="openCustomerSearch()" [disabled]="order.hasSavedOrder()">Buscar</button>
+            </div>
+            @for (message of order.errors().for('CustomerId'); track message) {
+              <div class="validation-message">{{ message }}</div>
+            }
+            <div class="form-text">No escriba el código manualmente. Use Buscar para evitar errores.</div>
+          </div>
+          <div class="col-lg-8">
+            <label class="form-label fw-semibold">Nombre del cliente</label>
+            <div class="nw-readonly-field" [class.has-value]="order.hasSelectedCustomer()">
+              <span>{{ order.hasSelectedCustomer() ? order.customerName() : 'Aún no ha seleccionado un cliente' }}</span>
+              @if (order.hasSelectedCustomer()) {
+                <span class="nw-status-pill nw-status-success">Cliente habilitado</span>
+              }
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <label class="form-label fw-semibold">Dirección de entrega <span class="nw-required">*</span></label>
+            <input class="form-control" name="shipAddress" maxlength="60" placeholder="Ej.: Av. Cevallos 123 y Mera"
+                   [(ngModel)]="order.shipAddress" (ngModelChange)="order.revalidate()" [disabled]="order.hasSavedOrder()" />
+            @for (message of order.errors().for('ShipAddress'); track message) {
+              <div class="validation-message">{{ message }}</div>
+            }
+            <div class="form-text">Máximo 60 caracteres.</div>
+          </div>
+          <div class="col-lg-2 col-md-4">
+            <label class="form-label fw-semibold">Ciudad <span class="nw-required">*</span></label>
+            <input class="form-control" name="shipCity" maxlength="15" placeholder="Ambato"
+                   [(ngModel)]="order.shipCity" (ngModelChange)="order.revalidate()" [disabled]="order.hasSavedOrder()" />
+            @for (message of order.errors().for('ShipCity'); track message) {
+              <div class="validation-message">{{ message }}</div>
+            }
+          </div>
+          <div class="col-lg-2 col-md-4">
+            <label class="form-label fw-semibold">País <span class="nw-required">*</span></label>
+            <input class="form-control" name="shipCountry" maxlength="15" placeholder="Ecuador"
+                   [(ngModel)]="order.shipCountry" (ngModelChange)="order.revalidate()" [disabled]="order.hasSavedOrder()" />
+            @for (message of order.errors().for('ShipCountry'); track message) {
+              <div class="validation-message">{{ message }}</div>
+            }
+          </div>
+          <div class="col-lg-2 col-md-4">
+            <label class="form-label fw-semibold">Código postal <span class="text-secondary fw-normal">(opcional)</span></label>
+            <input class="form-control" name="shipPostalCode" maxlength="10" placeholder="180101"
+                   [(ngModel)]="order.shipPostalCode" (ngModelChange)="order.revalidate()" [disabled]="order.hasSavedOrder()" />
+            @for (message of order.errors().for('ShipPostalCode'); track message) {
+              <div class="validation-message">{{ message }}</div>
+            }
+          </div>
+        </div>
+      </section>
+
+      <section class="nw-card mb-4">
+        <div class="nw-card-header nw-card-header-actions">
+          <div>
+            <span class="nw-step">02</span>
+            <div>
+              <h2>Productos de la orden</h2>
+              <p>El precio proviene del catálogo y no puede modificarse. La cantidad nunca debe superar el stock.</p>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary nw-btn-icon" (click)="openProductSearchForAdd()" [disabled]="order.hasSavedOrder()">
+            <span aria-hidden="true">＋</span>
+            Agregar producto
+          </button>
+        </div>
+
+        @for (message of order.errors().for('OrderDetails'); track message) {
+          <div class="validation-message mb-2">{{ message }}</div>
+        }
+
+        @if (order.orderDetails().length === 0) {
+          <div class="nw-empty-state nw-empty-state-action">
+            <div class="nw-empty-icon">▦</div>
+            <strong>La orden todavía no tiene productos</strong>
+            <span>Busque un producto del catálogo. Solo se mostrarán artículos con stock disponible.</span>
+            <button type="button" class="btn btn-primary mt-3" (click)="openProductSearchForAdd()">Agregar primer producto</button>
+          </div>
+        } @else {
+          <div class="table-responsive">
+            <table class="table align-middle nw-order-table">
+              <thead>
+                <tr>
+                  <th style="width:75px">ID</th>
+                  <th>Producto</th>
+                  <th style="width:130px">Precio</th>
+                  <th style="width:115px">Stock</th>
+                  <th style="width:205px">Cantidad</th>
+                  <th style="width:135px" class="text-end">Subtotal</th>
+                  <th style="width:185px"></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (detail of order.orderDetails(); track detail.productId; let i = $index) {
+                  <tr [class.nw-row-danger]="order.exceedsStock(detail)">
+                    <td><strong>#{{ detail.productId }}</strong></td>
+                    <td>
+                      <div class="nw-product-cell">
+                        <strong>{{ detail.productName }}</strong>
+                        @if (detail.unitsInStock <= 5) {
+                          <span class="nw-status-pill nw-status-warning">Stock bajo</span>
+                        }
+                      </div>
+                    </td>
+                    <td>{{ money(detail.unitPrice) }}</td>
+                    <td><span class="nw-stock-chip" [class.is-low]="detail.unitsInStock <= 5">{{ detail.unitsInStock }} disponibles</span></td>
+                    <td>
+                      <div class="nw-quantity-control">
+                        <button type="button" class="nw-qty-btn" title="Disminuir cantidad" (click)="order.decreaseQuantity(i)" [disabled]="order.hasSavedOrder()">−</button>
+                        <input type="number" class="form-control text-center" min="1" [max]="detail.unitsInStock"
+                               [ngModel]="detail.quantity" (ngModelChange)="onQuantityInput(i, $event)"
+                               [ngModelOptions]="{ standalone: true }" [disabled]="order.hasSavedOrder()" />
+                        <button type="button" class="nw-qty-btn" title="Aumentar cantidad" (click)="order.increaseQuantity(i)" [disabled]="order.hasSavedOrder()">+</button>
+                      </div>
+                      @for (message of order.errors().for('OrderDetails[' + i + '].Quantity'); track message) {
+                        <div class="validation-message">{{ message }}</div>
+                      }
+                      @if (order.exceedsStock(detail)) {
+                        <div class="nw-field-warning">Ingrese una cantidad entre 1 y {{ detail.unitsInStock }}.</div>
+                      }
+                    </td>
+                    <td class="fw-bold text-end">{{ money(order.subtotalOf(detail)) }}</td>
+                    <td class="text-end">
+                      <div class="d-flex gap-2 justify-content-end flex-wrap">
+                        <button type="button" class="btn btn-sm btn-outline-primary" (click)="openProductSearchForChange(i)" [disabled]="order.hasSavedOrder()">Cambiar</button>
+                        <button type="button" class="btn btn-sm btn-outline-danger" (click)="requestRemoveProduct(i)" [disabled]="order.hasSavedOrder()">Eliminar</button>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </section>
+    </div>
+
+    <aside class="nw-order-aside">
+      <section class="nw-card nw-sticky-summary">
+        <div class="nw-summary-heading">
+          <span class="nw-kicker">REVISIÓN RÁPIDA</span>
+          <h2>Resumen de la venta</h2>
+        </div>
+
+        <div class="nw-check-list">
+          <div class="nw-check-item" [class.is-ok]="order.hasSelectedCustomer()">
+            <span>{{ order.hasSelectedCustomer() ? '✓' : '1' }}</span>
+            <div><strong>Cliente</strong><small>{{ order.hasSelectedCustomer() ? order.customerName() : 'Seleccione un cliente' }}</small></div>
+          </div>
+          <div class="nw-check-item" [class.is-ok]="order.hasProducts()">
+            <span>{{ order.hasProducts() ? '✓' : '2' }}</span>
+            <div><strong>Productos</strong><small>{{ order.hasProducts() ? order.orderDetails().length + ' producto(s) · ' + order.totalUnits() + ' unidad(es)' : 'Agregue al menos un producto' }}</small></div>
+          </div>
+          <div class="nw-check-item" [class.is-ok]="!order.hasStockIssues() && order.hasProducts()">
+            <span>{{ !order.hasStockIssues() && order.hasProducts() ? '✓' : '3' }}</span>
+            <div><strong>Stock</strong><small>{{ order.hasStockIssues() ? 'Revise las cantidades' : order.hasProducts() ? 'Cantidades dentro del stock' : 'Pendiente' }}</small></div>
+          </div>
+        </div>
+
+        <div class="nw-totals nw-totals-emphasis">
+          <div><span>Subtotal</span><strong>{{ money(order.subtotal()) }}</strong></div>
+          <div><span>IVA (15%)</span><strong>{{ money(order.tax()) }}</strong></div>
+          <div class="nw-grand-total"><span>Total</span><strong>{{ money(order.total()) }}</strong></div>
+        </div>
+
+        <div class="nw-security-note">
+          <span aria-hidden="true">✓</span>
+          <p>Antes de guardar, el servidor vuelve a validar cliente, saldo pendiente y stock para evitar una venta inválida.</p>
+        </div>
+
+        <button class="btn btn-primary btn-lg w-100" type="submit" [disabled]="!order.canAttemptSave()">
+          {{ order.isSubmitting() ? 'Guardando orden...' : order.hasSavedOrder() ? 'Orden guardada' : 'Revisar y guardar orden' }}
+        </button>
+
+        @if (!order.canAttemptSave() && !order.hasSavedOrder()) {
+          <div class="nw-submit-help">
+            @if (!order.hasSelectedCustomer()) {
+              <span>Seleccione un cliente para continuar.</span>
+            } @else if (!order.hasProducts()) {
+              <span>Agregue al menos un producto para continuar.</span>
+            } @else if (order.hasStockIssues()) {
+              <span>Corrija las cantidades que superan el stock.</span>
+            }
+          </div>
+        }
+
+        <button type="button" class="btn btn-link text-secondary w-100 mt-2" (click)="requestCancelOrder()" [disabled]="order.isSubmitting()">
+          Cancelar y salir
+        </button>
+      </section>
+    </aside>
+  </div>
+</form>
+
+<app-customer-search-modal
+  [isOpen]="showCustomerSearch()"
+  (selected)="customerSelected($event)"
+  (closed)="closeCustomerSearch()" />
+
+<app-product-search-modal
+  [isOpen]="showProductSearch()"
+  [excludedProductIds]="productIdsUnavailable()"
+  (selected)="productSelected($event)"
+  (closed)="closeProductSearch()" />
+
+@if (showRemoveConfirmation()) {
+  <div class="nw-modal-backdrop">
+    <section class="nw-modal nw-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="removeProductTitle">
+      <div class="nw-confirm-icon nw-confirm-danger">!</div>
+      <h2 id="removeProductTitle">¿Eliminar este producto?</h2>
+      <p>Se quitará <strong>{{ productNameToRemove }}</strong> del detalle. Esta acción no afecta el inventario hasta que la orden sea guardada.</p>
+      <div class="nw-confirm-actions">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeRemoveConfirmation()">Conservar producto</button>
+        <button type="button" class="btn btn-danger" (click)="confirmRemoveProduct()">Sí, eliminar</button>
+      </div>
+    </section>
+  </div>
+}
+
+@if (showSaveConfirmation()) {
+  <div class="nw-modal-backdrop">
+    <section class="nw-modal nw-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="saveOrderTitle">
+      <div class="nw-confirm-icon nw-confirm-primary">✓</div>
+      <h2 id="saveOrderTitle">Confirme la orden de venta</h2>
+      <p>Revise este resumen antes de guardar. Después del registro se actualizará el inventario.</p>
+      <div class="nw-confirm-summary">
+        <div><span>Cliente</span><strong>{{ order.customerName() }} ({{ order.customerId() }})</strong></div>
+        <div><span>Productos</span><strong>{{ order.orderDetails().length }} línea(s) · {{ order.totalUnits() }} unidad(es)</strong></div>
+        <div><span>Total</span><strong>{{ money(order.total()) }}</strong></div>
+      </div>
+      <div class="nw-confirm-actions">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeSaveConfirmation()" [disabled]="order.isSubmitting()">Volver a revisar</button>
+        <button type="button" class="btn btn-primary" (click)="confirmSave()" [disabled]="order.isSubmitting()">
+          {{ order.isSubmitting() ? 'Guardando...' : 'Confirmar y guardar' }}
+        </button>
+      </div>
+    </section>
+  </div>
+}
+
+<!-- Success window: only after the API returned a valid order id. -->
+@if (showOrderSuccess() && order.lastOrderId(); as orderId) {
+  <div class="nw-modal-backdrop nw-order-success-backdrop">
+    <section class="nw-modal nw-order-success-modal" role="dialog" aria-modal="true"
+             aria-labelledby="nwOrderSuccessTitle" aria-describedby="nwOrderSuccessDescription">
+      <div class="nw-order-success-top">
+        <div class="nw-order-success-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" width="34" height="34">
+            <path d="m5 12 4.5 4.5L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <span class="nw-order-success-eyebrow">VENTA CONFIRMADA</span>
+        <h2 id="nwOrderSuccessTitle">¡Orden de compra realizada correctamente!</h2>
+        <p id="nwOrderSuccessDescription">
+          La orden se registró correctamente. Ahora puede consultar los datos
+          de entrega, los productos y el comprobante generado.
+        </p>
+      </div>
+
+      <div class="nw-order-success-summary">
+        <div class="nw-order-success-reference">
+          <div>
+            <span class="nw-order-success-label">NÚMERO DE ORDEN</span>
+            <strong>{{ invoiceNumber(orderId) }}</strong>
+          </div>
+          <span class="nw-order-success-status"><span aria-hidden="true">●</span> Registrada</span>
+        </div>
+        <div class="nw-order-success-facts">
+          <div><span>Cliente</span><strong>{{ order.customerName() }}</strong></div>
+          <div><span>Productos</span><strong>{{ order.orderDetails().length }} producto(s) · {{ order.totalUnits() }} unidad(es)</strong></div>
+          <div><span>Total de la orden</span><strong class="nw-order-success-total">{{ money(order.total()) }}</strong></div>
+        </div>
+      </div>
+
+      <div class="nw-order-success-actions">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeOrderSuccess()">Cerrar</button>
+        <button type="button" class="btn btn-primary nw-order-success-view" (click)="viewCreatedOrder()">
+          Ver orden <span aria-hidden="true">→</span>
+        </button>
+      </div>
+      <p class="nw-order-success-footnote">
+        «Ver orden» abre la orden guardada y permite consultar su detalle y comprobante.
+      </p>
+    </section>
+  </div>
+}
+
+@if (showCancelConfirmation()) {
+  <div class="nw-modal-backdrop">
+    <section class="nw-modal nw-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="cancelOrderTitle">
+      <div class="nw-confirm-icon nw-confirm-warning">!</div>
+      <h2 id="cancelOrderTitle">¿Salir sin guardar?</h2>
+      <p>Los datos ingresados en esta orden se perderán porque todavía no han sido registrados.</p>
+      <div class="nw-confirm-actions">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeCancelConfirmation()">Seguir editando</button>
+        <button type="button" class="btn btn-danger" (click)="confirmCancelOrder()">Salir sin guardar</button>
+      </div>
+    </section>
+  </div>
+}

@@ -1,0 +1,89 @@
+<div class="nw-home">
+  <section class="nw-home-hero">
+    <div class="nw-home-hero-copy">
+      <span class="nw-kicker">SISTEMA COMERCIAL NORTHWIND</span>
+      <h1>Ventas claras, controladas y seguras</h1>
+      <p>Gestione órdenes de venta con validación de clientes, control de inventario, cálculo automático de IVA y consulta de órdenes de venta desde una sola aplicación.</p>
+
+      @if (auth.isAuthenticated()) {
+        <div class="d-flex gap-2 flex-wrap mt-4">
+          <a class="btn btn-primary btn-lg nw-btn-icon" routerLink="/createorder"><span aria-hidden="true">＋</span>Crear nueva orden</a>
+          <a class="btn btn-outline-primary btn-lg nw-btn-icon" routerLink="/invoices"><span aria-hidden="true">⌕</span>Consultar órdenes de venta</a>
+        </div>
+        <div class="nw-home-session mt-4">
+          <span class="nw-status-dot"></span>
+          <span>Sesión activa. Ya puede registrar ventas y consultar órdenes de venta.</span>
+        </div>
+      } @else {
+        <div class="d-flex gap-2 flex-wrap mt-4">
+          <a class="btn btn-primary btn-lg" routerLink="/user/login">Iniciar sesión</a>
+          <a class="btn btn-outline-primary btn-lg" routerLink="/user/register">Crear cuenta</a>
+        </div>
+        <div class="nw-home-session mt-4">
+          <span class="nw-status-dot is-muted"></span>
+          <span>Inicie sesión para acceder a las operaciones de venta.</span>
+        </div>
+      }
+    </div>
+
+    <div class="nw-home-hero-panel" aria-hidden="true">
+      <div class="nw-hero-panel-top">
+        <span>CONTROL DE VENTA</span>
+        <span class="nw-status-pill nw-status-success">Protegido</span>
+      </div>
+      <div class="nw-hero-metric">
+        <small>Flujo de una orden</small>
+        <strong>Cliente → Producto → Stock → Orden</strong>
+      </div>
+      <div class="nw-hero-check"><span>✓</span> Cliente validado antes de vender</div>
+      <div class="nw-hero-check"><span>✓</span> Precio tomado del catálogo</div>
+      <div class="nw-hero-check"><span>✓</span> Inventario controlado al guardar</div>
+      <div class="nw-hero-check"><span>✓</span> Orden disponible en PDF</div>
+    </div>
+  </section>
+
+  <section class="nw-home-section">
+    <div class="nw-section-heading">
+      <span class="nw-kicker">FUNCIONES PRINCIPALES</span>
+      <h2>Todo el proceso de venta en un flujo sencillo</h2>
+      <p>La interfaz guía al usuario y evita acciones que puedan producir órdenes incorrectas.</p>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-lg-4">
+        <div class="nw-home-feature h-100">
+          <div class="nw-feature-icon">01</div>
+          <strong>Cliente habilitado</strong>
+          <span>Busque por código o nombre. Un cliente con saldo pendiente se identifica claramente y no puede seleccionarse.</span>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="nw-home-feature h-100">
+          <div class="nw-feature-icon">02</div>
+          <strong>Inventario bajo control</strong>
+          <span>Solo se muestran productos con existencia disponible. La cantidad se compara con el stock antes de guardar.</span>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="nw-home-feature h-100">
+          <div class="nw-feature-icon">03</div>
+          <strong>Orden verificable</strong>
+          <span>Consulte ventas registradas, revise encabezado y detalle, y genere el documento PDF cuando lo necesite.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="nw-home-process">
+    <div class="nw-section-heading">
+      <span class="nw-kicker">FLUJO DE TRABAJO</span>
+      <h2>Cómo registrar una venta</h2>
+    </div>
+    <div class="nw-process-grid">
+      <div><span>1</span><strong>Seleccione el cliente</strong><small>El sistema verifica su estado comercial.</small></div>
+      <div><span>2</span><strong>Agregue productos</strong><small>Precio y stock llegan desde el catálogo.</small></div>
+      <div><span>3</span><strong>Revise cantidades</strong><small>No se permite vender por encima del stock.</small></div>
+      <div><span>4</span><strong>Confirme la venta</strong><small>Revise subtotal, IVA y total antes de guardar.</small></div>
+    </div>
+  </section>
+</div>

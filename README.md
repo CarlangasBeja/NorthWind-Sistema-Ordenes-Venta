@@ -1,5 +1,7 @@
 # NorthWind | Sistema web de órdenes de venta
 
+> **Rama `feature/NortWind_FrontAngular`:** en esta versión el front-end es **Angular 21** (`4. Frameworks And Drivers/UIs/NorthWind.Sales.AngularClient`). La guía de instalación y configuración está en [`README_ANGULAR.md`](README_ANGULAR.md).
+
 **Proyecto académico de gestión de ventas desarrollado con ASP.NET Core Web API, Blazor WebAssembly, .NET 8 y SQL Server LocalDB**, estructurado por capas con un enfoque de **Clean Architecture**.
 
 La aplicación permite consultar clientes y productos, registrar órdenes de venta, buscar órdenes emitidas y visualizar sus comprobantes en PDF. Incorpora autenticación de usuarios con ASP.NET Core Identity y JWT, validaciones de negocio y almacenamiento separado para ventas, usuarios y registros de auditoría.
