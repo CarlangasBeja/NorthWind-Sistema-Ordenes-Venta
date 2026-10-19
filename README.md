@@ -1,6 +1,8 @@
+> **Fedora 44:** Esta distribución del proyecto incluye una instalación adaptada a Fedora Linux con SQL Server 2022 en Podman. Para iniciar desde una terminal, ejecutar `bash ./INICIAR_FEDORA44.sh`. Guía completa: [fedora/README_FEDORA44.md](fedora/README_FEDORA44.md). Las instrucciones de LocalDB de este README solo aplican a Windows.
+
 # NorthWind | Sistema web de órdenes de venta
 
-**Proyecto académico de gestión de ventas desarrollado con ASP.NET Core Web API, Blazor WebAssembly, .NET 8 y SQL Server LocalDB**, estructurado por capas con un enfoque de **Clean Architecture**.
+**Proyecto académico de gestión de ventas desarrollado con ASP.NET Core Web API, Blazor WebAssembly, .NET 10 y SQL Server LocalDB**, estructurado por capas con un enfoque de **Clean Architecture**.
 
 La aplicación permite consultar clientes y productos, registrar órdenes de venta, buscar órdenes emitidas y visualizar sus comprobantes en PDF. Incorpora autenticación de usuarios con ASP.NET Core Identity y JWT, validaciones de negocio y almacenamiento separado para ventas, usuarios y registros de auditoría.
 
@@ -21,7 +23,7 @@ La aplicación permite consultar clientes y productos, registrar órdenes de ven
 | Componente | Tecnología |
 | --- | --- |
 | Lenguaje | C# |
-| Framework | .NET 8 |
+| Framework | .NET 10 |
 | Backend | ASP.NET Core Web API |
 | Frontend | Blazor WebAssembly y componentes Razor |
 | Acceso a datos | Entity Framework Core |
@@ -115,7 +117,7 @@ Las operaciones realizadas desde la aplicación permiten generar nuevos registro
 
 - Windows 10 o Windows 11.
 - Visual Studio Community con la carga de trabajo Desarrollo de ASP.NET y web.
-- SDK de .NET 8.
+- SDK de .NET 10.
 - SQL Server Express LocalDB.
 - Git para clonar o publicar el repositorio.
 - Conexión a Internet para restaurar paquetes NuGet por primera vez.
@@ -267,7 +269,7 @@ Antes de publicar la aplicación en Internet, deben revisarse credenciales, perm
 
 | Situación | Comprobación recomendada |
 | --- | --- |
-| `dotnet` no se reconoce | Instalar el SDK .NET 8 y abrir una terminal nueva. |
+| `dotnet` no se reconoce | Instalar el SDK .NET 10 y abrir una terminal nueva. |
 | Error de conexión SQL | Confirmar que LocalDB esté instalado, que el servidor sea `(localdb)\MSSQLLocalDB` y que las tres bases existan. |
 | Error al validar o firmar un JWT | Ejecutar `Configurar-Desarrollo.ps1` y reiniciar la API en modo `Development`. |
 | El cliente no se conecta con el backend | Verificar que la API esté activa en `https://localhost:7154` y que ese valor coincida con `wwwroot/appsettings.json` del cliente. |

@@ -14,7 +14,8 @@ internal class NorthWindDomainLogsContextFactory :
             new DBOptions
             {
                 DomainLogsConnectionString =
-                    "Server=(localdb)\\mssqllocaldb;Database=NorthWindLogsDB"
+                    Environment.GetEnvironmentVariable("DBOptions__DomainLogsConnectionString")
+                    ?? "Server=(localdb)\\mssqllocaldb;Database=NorthWindLogsDB"
             });
 
         return new NorthWindDomainLogsContext(DbOptions);

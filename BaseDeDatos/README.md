@@ -1,3 +1,5 @@
+> **En Fedora 44:** no instalar LocalDB; ejecutar `bash ./INICIAR_FEDORA44.sh` desde la raíz. Importa los mismos SQL dentro de SQL Server 2022 en Podman. Más información: `fedora/README_FEDORA44.md`.
+
 # Bases de datos de NorthWind (SQL Server LocalDB)
 
 Los archivos `.sql` permiten crear en una instalación local de SQL Server las **tres bases** del proyecto, sin publicar los archivos físicos `.mdf` ni `.ldf`.

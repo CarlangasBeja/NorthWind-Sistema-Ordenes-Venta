@@ -1,0 +1,14 @@
+NORTHWIND BLAZOR - FEDORA WORKSTATION 44 - .NET 10
+
+1. Extraer el ZIP en Fedora 44 Workstation x86_64.
+2. Abrir una terminal en esta carpeta (donde está NorthWind.sln).
+3. Ejecutar: bash ./INICIAR_FEDORA44.sh
+4. Ingresar a http://127.0.0.1:5255 (Blazor) o http://127.0.0.1:5254/swagger (API).
+
+.NET: los 31 proyectos tienen TargetFramework net10.0.
+BD: SQL Server 2022 en Podman con 3 bases y datos de demostración.
+SDK: Fedora instala dotnet-sdk-10.0.
+Comprobación: bash fedora/comprobar-net10.sh
+Documentación: fedora/GUIA_MIGRACION_NET10.md y fedora/README_FEDORA44.md
+
+ESTADO: validaciones estáticas y estructura correctas. Compilación y pruebas funcionales pendientes de ejecutarse en Fedora: este entorno no tiene dotnet ni acceso a NuGet.

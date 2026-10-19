@@ -6,7 +6,12 @@ internal class DomainTransaction : IDomainTransaction, IDisposable
     TransactionScope? TransactionScope;
     public void BeginTransaction()
     {
-        TransactionManager.ImplicitDistributedTransactions = true;
+        // La promoción automática a MSDTC solo está disponible en Windows.
+        // Fedora usa una transacción local ligera contra una única base SQL Server.
+        if (OperatingSystem.IsWindows())
+        {
+            TransactionManager.ImplicitDistributedTransactions = true;
+        }
         TransactionScope = new TransactionScope(TransactionScopeOption.Required,
             new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
             TransactionScopeAsyncFlowOption.Enabled);

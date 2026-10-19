@@ -1,3 +1,7 @@
+NOTA: EN FEDORA 44 NO SIGA LOS PASOS DE POWERSHELL NI LAS URL HTTPS DE ESTA GUÍA DE WINDOWS.
+Para Fedora ejecute: bash ./INICIAR_FEDORA44.sh
+Lea: fedora/README_FEDORA44.md
+
 NORTHWIND - PARCHE API + FRONTEND EN ESPAÑOL
 
 1. Detenga la API y Blazor (Ctrl+C en ambas terminales).
