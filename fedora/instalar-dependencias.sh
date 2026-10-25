@@ -8,6 +8,7 @@ command -v dotnet  >/dev/null 2>&1 || paquetes+=(dotnet-sdk-10.0)
 command -v podman  >/dev/null 2>&1 || paquetes+=(podman)
 command -v openssl >/dev/null 2>&1 || paquetes+=(openssl)
 command -v curl    >/dev/null 2>&1 || paquetes+=(curl)
+command -v python3 >/dev/null 2>&1 || paquetes+=(python3)
 if (( ${#paquetes[@]} )); then
   msg "Instalando en Fedora: ${paquetes[*]}"
   sudo dnf install -y "${paquetes[@]}" || fail 'No se pudieron instalar las dependencias desde DNF.'

@@ -1,6 +1,6 @@
-# Ejecutar NorthWind-Blazor en Fedora Workstation 44
+# Ejecutar NorthWind en Fedora Workstation 44
 
-Esta carpeta contiene la adaptación del proyecto original para **Fedora Workstation 44 x86_64**. Se conservan el **frontend Blazor WebAssembly**, la **API ASP.NET Core**, **Identity/JWT** y las **tres bases de SQL Server**, sin instalar LocalDB (Windows-only).
+Esta carpeta contiene la adaptación del proyecto original para **Fedora Workstation 44 x86_64**. Permite iniciar solo la **API ASP.NET Core** o el sistema completo. Ambos modos usan **Identity/JWT** y las **tres bases SQL Server** en Podman, sin instalar LocalDB (Windows-only).
 
 ## Requisitos de la máquina virtual
 
@@ -9,26 +9,45 @@ Esta carpeta contiene la adaptación del proyecto original para **Fedora Worksta
 - Acceso a `sudo` para instalar paquetes DNF por primera vez.
 - No ejecutar los comandos como root; Podman utiliza contenedores **rootless**.
 
+## Solo backend (API y SQL Server)
+
+Para ejecutar únicamente el backend, desde la raíz extraída del proyecto (la carpeta que contiene `NorthWind.sln`), ejecutar:
+
+```bash
+bash ./INICIAR_BACKEND_FEDORA44.sh
+```
+
+El script instala las dependencias que falten (`dotnet-sdk-10.0`, Podman, OpenSSL, curl y Python 3), genera credenciales locales, inicia SQL Server 2022 en Podman y prepara las tres bases. Después **compila solo `NorthWind.Sales.WebApi` y sus dependencias**, inicia la API y ejecuta una comprobación de login JWT y consultas protegidas a clientes, productos y órdenes. La comprobación no crea ni modifica órdenes.
+
+- **Swagger / API:** http://127.0.0.1:5254/swagger
+- **Logs:** `fedora/logs/backend-build.log`, `backend-api.log` y `backend-smoke-test.log`
+- Para explorar los endpoints, iniciar sesión en `POST /user/Login` desde Swagger con una cuenta de `NorthWindUsersDB` y pulsar **Authorize** con el JWT recibido.
+- Mantener abierta la terminal mientras se usa el backend; `Ctrl+C` detiene la API, pero conserva SQL Server y sus datos.
+- Para comprobarlo de nuevo mientras está activo: `bash fedora/verificar-backend.sh`.
+- Para detener SQL Server sin borrar sus datos: `bash fedora/detener-sql.sh`.
+
+El backend escucha solo en `127.0.0.1` por defecto. Esto lo limita a la propia estación de trabajo y evita exponerlo en la red.
+
 ## Inicio (copiar y pegar)
 
 La aplicación ha sido migrada a **.NET 10 LTS**, con **Entity Framework Core 10**, Blazor WebAssembly 10, ASP.NET Core Identity 10, JwtBearer 10 y bibliotecas Microsoft.Extensions 10. El servidor SQL continúa en SQL Server 2022 por compatibilidad con las bases de datos existentes. **No se requiere el SDK 8**.
 
 1. Extraer el ZIP dentro de Fedora en **Descargas** o en otra carpeta local. No ejecutarlo desde una carpeta compartida de Windows montada como `noexec`.
-2. Abrir una terminal dentro de la carpeta `NorthWind-Blazor-Fedora44` (la que contiene `NorthWind.sln`).
-3. Ejecutar:
+2. Abrir una terminal dentro de la carpeta extraída (la que contiene `NorthWind.sln`).
+3. Para iniciar API y la interfaz incluida:
 
 ```bash
 bash ./INICIAR_FEDORA44.sh
 ```
 
-Este comando, automáticamente:
+Este comando inicia el sistema completo. Para usar **solo la API**, ejecutar `bash ./INICIAR_BACKEND_FEDORA44.sh` como se indicó arriba. El modo completo, automáticamente:
 
-1. Instala desde los repositorios Fedora los paquetes que falten (`dotnet-sdk-10.0`, `podman`, `openssl`, `curl`).
+1. Instala desde los repositorios Fedora los paquetes que falten (`dotnet-sdk-10.0`, `podman`, `openssl`, `curl`, `python3`).
 2. Crea credenciales aleatorias locales en `fedora/.env` (permisos 600).
 3. Descarga SQL Server 2022 Developer y lo inicia en Podman con almacenamiento persistente (puerto TCP `127.0.0.1:14333`).
 4. Crea/actualiza de forma idempotente `NorthWindDB`, `NorthWindLogsDB`, `NorthWindUsersDB` y carga el SQL con diez productos y diez clientes adicionales.
 5. Compila `NorthWind.sln` con .NET 10.
-6. Inicia la API y Blazor **en HTTP local**, evitando problemas de certificado HTTPS de desarrollo.
+6. Inicia la API y la interfaz incluida **en HTTP local**, evitando problemas de certificado HTTPS de desarrollo.
 7. Ejecuta automáticamente pruebas reales de **login JWT y búsquedas de clientes, productos y órdenes**, y guarda sus resultados en `fedora/logs/prueba-funcional.log`.
 
 En el navegador de Fedora, abrir:
@@ -36,7 +55,7 @@ En el navegador de Fedora, abrir:
 - **Aplicación:** http://127.0.0.1:5255
 - **Swagger API:** http://127.0.0.1:5254/swagger
 
-Dejar abierta la terminal. Para detener API y Blazor, pulsar **Ctrl+C**. SQL Server queda iniciado para reusar sus datos en el siguiente arranque; para detenerlo:
+Dejar abierta la terminal. Para detener la API y la interfaz, pulsar **Ctrl+C**. SQL Server queda iniciado para reusar sus datos en el siguiente arranque; para detenerlo:
 
 ```bash
 bash fedora/detener-sql.sh
@@ -52,7 +71,7 @@ bash ./INICIAR_FEDORA44.sh
 
 Después de instalar las dependencias, ejecutar `bash fedora/comprobar-net10.sh`. Revisa que los 31 proyectos apunten a net10.0 y compila la solución completa. El primer inicio necesita internet para NuGet.
 
-## Probar las tres bases y los dos servicios
+## Probar las tres bases y los servicios
 
 Mientras está abierta otra terminal con `INICIAR_FEDORA44.sh` ejecutándose:
 
@@ -60,7 +79,7 @@ Mientras está abierta otra terminal con `INICIAR_FEDORA44.sh` ejecutándose:
 bash fedora/verificar.sh
 ```
 
-Este script comprueba las tablas de clientes/productos/órdenes, usuarios, auditoría y que la API y Blazor respondan HTTP. Para repetir las pruebas de autenticación y búsquedas, ejecutar `bash fedora/probar-sistema.sh`. Los logs están en `fedora/logs/`.
+Este script comprueba las tablas de clientes/productos/órdenes, usuarios, auditoría y que la API y la interfaz incluida respondan HTTP. En el modo solo backend, usar `bash fedora/verificar-backend.sh`. Para repetir las pruebas de autenticación y búsquedas, ejecutar `bash fedora/probar-sistema.sh`. Los logs están en `fedora/logs/`.
 
 ## Credenciales y datos de prueba
 

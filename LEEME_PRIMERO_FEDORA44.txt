@@ -1,23 +1,31 @@
-NORTHWIND-BLAZOR PARA FEDORA WORKSTATION 44 (x86_64)
+NORTHWIND PARA FEDORA WORKSTATION 44 (x86_64)
 ===================================================
 
 1. EXTRAER TODO el ZIP dentro de Fedora 44 (por ejemplo en Descargas).
 2. Abrir la carpeta extraida en la terminal de Fedora.
-3. Ejecutar exactamente:
+3. Para ejecutar SOLO el backend (API + SQL Server), ejecutar:
+
+   bash ./INICIAR_BACKEND_FEDORA44.sh
+
+   Swagger API: http://127.0.0.1:5254/swagger
+
+   Para detener la API, Ctrl+C. SQL Server mantiene sus datos.
+
+   O para ejecutar el sistema completo con la interfaz incluida:
 
    bash ./INICIAR_FEDORA44.sh
 
-4. Abrir en Firefox:
+4. Si inicio el sistema completo, abrir en Firefox:
 
    http://127.0.0.1:5255
 
    Swagger API: http://127.0.0.1:5254/swagger
 
-5. Para detener API + Blazor, Ctrl+C en la terminal.
+5. Para detener la API (modo backend) o API + interfaz (modo completo), Ctrl+C.
 
 Base: SQL Server 2022 en Podman, conserva los datos entre reinicios.
 Configuracion de correo REAL (opcional): bash fedora/configurar-correo.sh
-Diagnosticos: bash fedora/verificar.sh
+Diagnosticos: bash fedora/verificar-backend.sh (solo backend) o bash fedora/verificar.sh (sistema completo)
 
 Guia detallada: fedora/README_FEDORA44.md
 

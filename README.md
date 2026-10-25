@@ -2,7 +2,7 @@
 
 # NorthWind | Sistema web de órdenes de venta
 
-**Proyecto académico de gestión de ventas desarrollado con ASP.NET Core Web API, Blazor WebAssembly, .NET 10 y SQL Server LocalDB**, estructurado por capas con un enfoque de **Clean Architecture**.
+**Proyecto académico de gestión de ventas desarrollado con React, ASP.NET Core Web API, .NET 10 y SQL Server LocalDB**, estructurado por capas con un enfoque de **Clean Architecture**.
 
 La aplicación permite consultar clientes y productos, registrar órdenes de venta, buscar órdenes emitidas y visualizar sus comprobantes en PDF. Incorpora autenticación de usuarios con ASP.NET Core Identity y JWT, validaciones de negocio y almacenamiento separado para ventas, usuarios y registros de auditoría.
 
@@ -25,7 +25,7 @@ La aplicación permite consultar clientes y productos, registrar órdenes de ven
 | Lenguaje | C# |
 | Framework | .NET 10 |
 | Backend | ASP.NET Core Web API |
-| Frontend | Blazor WebAssembly y componentes Razor |
+| Frontend | React, Vite y JavaScript |
 | Acceso a datos | Entity Framework Core |
 | Base de datos | SQL Server Express LocalDB |
 | Autenticación | ASP.NET Core Identity y JWT |
@@ -53,6 +53,10 @@ NorthWind/
 │   ├── 04_Verificar_Bases.sql
 │   └── README.md
 ├── Documentacion/
+├── react-frontend/
+│   ├── src/
+│   ├── package.json
+│   └── vite.config.js
 ├── Configurar-Desarrollo.ps1
 ├── Validate-Final.ps1
 ├── NorthWind.sln
@@ -60,6 +64,8 @@ NorthWind/
 ├── .gitignore
 └── README.md
 ```
+
+Los proyectos de interfaz Blazor/Razor anteriores se mantienen en el repositorio como referencia, pero ya no están incluidos en las soluciones activas ni se usan para ejecutar la aplicación.
 
 ### Responsabilidades de las capas
 
@@ -73,11 +79,11 @@ Implementa los casos de uso y coordina las operaciones necesarias para ejecutar 
 
 **3. Interface Adapters**
 
-Incluye controladores, presentadores, gateways y vistas Razor que permiten la comunicación entre la aplicación, los usuarios y los servicios externos.
+Incluye controladores, presentadores y gateways que conectan la lógica de negocio con la API y servicios externos. La interfaz de usuario React, ubicada en `react-frontend/`, consume los endpoints REST.
 
 **4. Frameworks And Drivers**
 
-Contiene los componentes vinculados con infraestructura y tecnología, como la Web API, el cliente Blazor, Entity Framework Core y la configuración de dependencias.
+Contiene los componentes vinculados con infraestructura y tecnología, como la Web API, Entity Framework Core y la configuración de dependencias. El código del frontend React se encuentra en `react-frontend/`.
 
 ## 4. Bases de datos
 
@@ -118,6 +124,7 @@ Las operaciones realizadas desde la aplicación permiten generar nuevos registro
 - Windows 10 o Windows 11.
 - Visual Studio Community con la carga de trabajo Desarrollo de ASP.NET y web.
 - SDK de .NET 10.
+- Node.js LTS y npm.
 - SQL Server Express LocalDB.
 - Git para clonar o publicar el repositorio.
 - Conexión a Internet para restaurar paquetes NuGet por primera vez.
@@ -164,31 +171,45 @@ dotnet restore .\NorthWind.sln
 dotnet build .\NorthWind.sln
 ```
 
-### Paso 5. Iniciar el backend
+Instalar y compilar el frontend. La salida se publica en `wwwroot/react` de la API:
 
-Abrir una terminal en la raíz y ejecutar:
+```powershell
+Set-Location .\react-frontend
+npm install
+npm run build
+Set-Location ..
+```
+
+### Paso 5. Iniciar la aplicación
+
+Iniciar la API desde la raíz. Si React ya se compiló, la aplicación web queda disponible en la raíz del servidor:
 
 ```powershell
 dotnet run --project '.\4. Frameworks And Drivers\UI\NorthWind.Sales.WebApi\NorthWind.Sales.WebApi.csproj' --launch-profile https
 ```
 
+Aplicación React:
+
+https://localhost:7154
+
 Documentación Swagger:
 
 https://localhost:7154/swagger
 
-### Paso 6. Iniciar el frontend
+### Desarrollo del frontend
 
-Abrir otra terminal en la misma carpeta y ejecutar:
+Para trabajar con recarga en caliente, dejar la API activa y ejecutar en otra terminal:
 
 ```powershell
-dotnet run --project '.\4. Frameworks And Drivers\UIs\NorthWind.Sales.BlazorClient\NorthWind.Sales.BlazorClient.csproj' --launch-profile https
+Set-Location .\react-frontend
+npm run dev
 ```
 
-Aplicación:
+Vite abre el frontend en:
 
-https://localhost:7254
+http://localhost:5173
 
-Si el sistema operativo no confía en el certificado HTTPS local, ejecutar:
+La configuración de desarrollo envía las llamadas a la API en `http://localhost:5254`. Si el sistema operativo no confía en el certificado HTTPS local, ejecutar:
 
 ```powershell
 dotnet dev-certs https --trust
@@ -272,7 +293,8 @@ Antes de publicar la aplicación en Internet, deben revisarse credenciales, perm
 | `dotnet` no se reconoce | Instalar el SDK .NET 10 y abrir una terminal nueva. |
 | Error de conexión SQL | Confirmar que LocalDB esté instalado, que el servidor sea `(localdb)\MSSQLLocalDB` y que las tres bases existan. |
 | Error al validar o firmar un JWT | Ejecutar `Configurar-Desarrollo.ps1` y reiniciar la API en modo `Development`. |
-| El cliente no se conecta con el backend | Verificar que la API esté activa en `https://localhost:7154` y que ese valor coincida con `wwwroot/appsettings.json` del cliente. |
+| El frontend no carga al iniciar la API | Ejecutar `npm install` y `npm run build` dentro de `react-frontend` para generar los archivos de `wwwroot/react`. |
+| Vite no se conecta con el backend | Verificar que la API esté activa en `http://localhost:5254`, que es el destino del proxy de Vite. |
 | Error de certificado HTTPS | Ejecutar `dotnet dev-certs https --trust`. |
 | Error 401 al consultar ventas | Iniciar sesión y enviar un token JWT válido al consumir endpoints protegidos. |
 | Conflicto al hacer `git push` | Comprobar `git remote -v` e integrar los cambios remotos antes de volver a subir; evitar `--force`. |
@@ -302,7 +324,7 @@ Las bases de datos se publican mediante sus scripts `.sql`, no como archivos fí
 
 ## 12. Alcance y estado del proyecto
 
-Este repositorio tiene fines académicos y de aprendizaje, centrados en la aplicación de C#, ASP.NET Core, Blazor, Clean Architecture, persistencia de datos y servicios web.
+Este repositorio tiene fines académicos y de aprendizaje, centrados en React, C#, ASP.NET Core, Clean Architecture, persistencia de datos y servicios web.
 
 El paquete integra el proyecto de aplicación y los scripts de las tres bases necesarios para preparar un entorno local.
 

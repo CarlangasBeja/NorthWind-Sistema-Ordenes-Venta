@@ -75,7 +75,19 @@ internal static class Startup
         app.UseCors();
         app.UseAuthentication();
         app.UseAuthorization();
+
+        var frontendIndex = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "react", "index.html");
+        if (File.Exists(frontendIndex))
+        {
+            app.UseStaticFiles();
+        }
+
         app.MapNorthWindSalesEndpoints();
+
+        if (File.Exists(frontendIndex))
+        {
+            app.MapFallbackToFile("react/index.html");
+        }
 
         return app;
     }

@@ -16,6 +16,9 @@
 USE [master];
 GO
 
+SET QUOTED_IDENTIFIER ON;
+GO
+
 IF DB_ID(N'NorthWindUsersDB') IS NULL
 BEGIN
     CREATE DATABASE [NorthWindUsersDB];

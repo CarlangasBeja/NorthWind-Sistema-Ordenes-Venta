@@ -1,0 +1,652 @@
+{
+  "schema": "clarification-questions/v1",
+  "generated_at": "2026-10-25T02:06:10Z",
+  "user_input": "Inspect and implement migration of the existing application's frontend to React in workspace `C:\\Users\\wilso\\Documents\\UMaterias\\Quinto Semestre\\PATRONES DE DISEÑO\\SEGUNDO PARCIAL\\NorthWind-Sistema-Ordenes-Venta`. Preserve existing backend/domain behavior, identify the existing stack, entry points, and UI, choose a conventional minimal integration unless a genuinely unavoidable major design decision requires user input, update relevant documentation, and run focused validation. Do not touch unrelated files. Return discovered stack/entry points, implementation summary, changed files, exact validation commands/results, and blockers. Classification: brownfield rewrite of frontend; project structure/recon: .NET solution with 31 C# projects, 7,634 LOC, Git; frontend scopes visible by project names include RazorViews, RazorComponents, BlazorClient; backend/domain must remain behaviorally unchanged. Detected stack facts: C#/.NET, two solution files. Backend/frontend presence: both. Feasibility verdict: feasible; React SPA can be integrated alongside existing .NET backend through a minimal static SPA/proxy/API integration, preserving domain behavior. No major design decision requires input per user's instruction; apply conventional defaults and record any unresolved nonblocking choices. Working directory is repository root. Produce clarification artifact per skill; if it returns NEEDS_INPUT, do not ask questions in chat, instead return its token and instructions. Classification: brownfield rewrite of frontend; project structure/recon: .NET solution with 31 C# projects, 7,634 LOC, Git; frontend scopes visible by project names include RazorViews, RazorComponents, BlazorClient; backend/domain must remain behaviorally unchanged. Detected stack facts: C#/.NET, two solution files. Backend/frontend presence: both. Feasibility verdict: feasible; React SPA can be integrated alongside existing .NET backend through a minimal static SPA/proxy/API integration, preserving domain behavior.",
+  "title": "NorthWind frontend to React",
+  "assessment_snapshot": {
+    "intro": "The supplied reconnaissance describes a brownfield frontend rewrite for the existing NorthWind .NET application:",
+    "bullets": [
+      "The repository contains two .NET solutions and 31 C# projects (7,634 LOC).",
+      "Frontend project names include RazorViews, RazorComponents, and BlazorClient; precise frontend entry points and active UI are to be confirmed during implementation inspection.",
+      "The backend and domain must remain behaviorally unchanged; a React SPA can be integrated alongside the existing backend using a minimal static SPA/proxy/API arrangement.",
+      "React is specified without a major version; no screenshots, component library, or design-system source were provided."
+    ]
+  },
+  "proposed_outcome": "Add a React frontend within the existing NorthWind workspace using a minimal conventional integration while preserving backend/domain behavior and existing user-visible behavior. Inspect and document the current frontend stack, active entry points, and UI; keep unrelated files untouched; then run focused validation. Use the clarified React version, UI-library/design references, and output location where provided.",
+  "scope": [
+    "frontend",
+    "backend",
+    "generic"
+  ],
+  "status": "awaiting_answers",
+  "questions": [
+    {
+      "id": "F1",
+      "kit": "frontend",
+      "field": "target.framework",
+      "title": "React version",
+      "question": "Which React major version should the new frontend target?",
+      "importance": "required",
+      "impact": 5,
+      "recommended": "React 19",
+      "default": null,
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "React 18",
+          "label": "React 18"
+        },
+        {
+          "value": "React 19",
+          "label": "React 19"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "F2",
+      "kit": "frontend",
+      "field": "target.component_library",
+      "title": "Component library",
+      "question": "Which component/UI library should the React frontend use? Choose a library or a minimal native HTML/CSS approach.",
+      "importance": "required",
+      "impact": 5,
+      "recommended": "No component library (native HTML/CSS)",
+      "default": null,
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": {
+        "question_id": "F1",
+        "visible_when": null,
+        "options_when": {
+          "React 18": [
+            {
+              "value": "No component library (native HTML/CSS)",
+              "label": "No component library (native HTML/CSS)"
+            },
+            {
+              "value": "MUI",
+              "label": "MUI"
+            },
+            {
+              "value": "Ant Design",
+              "label": "Ant Design"
+            },
+            {
+              "value": "Radix UI",
+              "label": "Radix UI"
+            }
+          ],
+          "React 19": [
+            {
+              "value": "No component library (native HTML/CSS)",
+              "label": "No component library (native HTML/CSS)"
+            },
+            {
+              "value": "MUI",
+              "label": "MUI"
+            },
+            {
+              "value": "Ant Design",
+              "label": "Ant Design"
+            },
+            {
+              "value": "Radix UI",
+              "label": "Radix UI"
+            }
+          ]
+        }
+      },
+      "options": [
+        {
+          "value": "No component library (native HTML/CSS)",
+          "label": "No component library (native HTML/CSS)"
+        },
+        {
+          "value": "MUI",
+          "label": "MUI"
+        },
+        {
+          "value": "Ant Design",
+          "label": "Ant Design"
+        },
+        {
+          "value": "Radix UI",
+          "label": "Radix UI"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "F3",
+      "kit": "frontend",
+      "field": "visual.screenshots",
+      "title": "Current UI references",
+      "question": "Provide screenshot/recording file paths, a staging URL, or a Figma link for the existing UI. If none are available, describe that briefly.",
+      "importance": "required",
+      "impact": 4,
+      "recommended": null,
+      "default": null,
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "type": "text",
+      "options": []
+    },
+    {
+      "id": "F4",
+      "kit": "frontend",
+      "field": "visual.design_system",
+      "title": "Design system",
+      "question": "What design-system or design-token source should the React UI follow? Provide a Figma/Storybook/token-file reference or confirm matching the existing UI pixel-by-pixel using extracted CSS custom properties.",
+      "importance": "required",
+      "impact": 4,
+      "recommended": "Match existing UI pixel-by-pixel using extracted CSS custom properties",
+      "default": "Match existing UI pixel-by-pixel using extracted CSS custom properties",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "Match existing UI pixel-by-pixel using extracted CSS custom properties",
+          "label": "Match existing UI pixel-by-pixel using extracted CSS custom properties"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "F5",
+      "kit": "frontend",
+      "field": "compliance.accessibility",
+      "title": "Accessibility target",
+      "question": "Which accessibility standard should the React frontend target?",
+      "importance": "recommended",
+      "impact": 3,
+      "recommended": "WCAG 2.1 AA",
+      "default": "WCAG 2.1 AA",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "WCAG 2.1 AA",
+          "label": "WCAG 2.1 AA"
+        },
+        {
+          "value": "WCAG 2.2 AA",
+          "label": "WCAG 2.2 AA"
+        },
+        {
+          "value": "Section 508",
+          "label": "Section 508"
+        },
+        {
+          "value": "None / not required",
+          "label": "None / not required"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "F6",
+      "kit": "frontend",
+      "field": "compatibility.browsers",
+      "title": "Browser support",
+      "question": "Which browser/runtime compatibility targets must the frontend support?",
+      "importance": "recommended",
+      "impact": 2,
+      "recommended": "Modern evergreen (Chrome, Firefox, Safari, Edge — latest 2 major versions)",
+      "default": "modern evergreen (Chrome, Firefox, Safari, Edge — latest 2 major versions)",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "Modern evergreen (Chrome, Firefox, Safari, Edge — latest 2 major versions)",
+          "label": "Modern evergreen (Chrome, Firefox, Safari, Edge — latest 2 major versions)"
+        },
+        {
+          "value": "Other browser target",
+          "label": "Other browser target"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "F7",
+      "kit": "frontend",
+      "field": "responsive.breakpoints",
+      "title": "Responsive strategy",
+      "question": "What responsive/breakpoint strategy should the React frontend use?",
+      "importance": "recommended",
+      "impact": 3,
+      "recommended": "Mobile-first using existing breakpoints detected from codebase",
+      "default": "mobile-first using existing breakpoints detected from codebase",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "Mobile-first using existing breakpoints detected from codebase",
+          "label": "Mobile-first using existing breakpoints detected from codebase"
+        },
+        {
+          "value": "Desktop-only",
+          "label": "Desktop-only"
+        },
+        {
+          "value": "Match current layout exactly",
+          "label": "Match current layout exactly"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "F8",
+      "kit": "frontend",
+      "field": "i18n.locales",
+      "title": "Locales",
+      "question": "Which locales are in scope for the React frontend?",
+      "importance": "optional",
+      "impact": 2,
+      "recommended": "Preserve current locales; keep existing i18n library if present",
+      "default": "preserve current locales; keep existing i18n library if present",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "Preserve current locales; keep existing i18n library if present",
+          "label": "Preserve current locales; keep existing i18n library if present"
+        },
+        {
+          "value": "None",
+          "label": "None"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "F9",
+      "kit": "frontend",
+      "field": "state_mgmt.preference",
+      "title": "State management",
+      "question": "What client-side state management preference should be used?",
+      "importance": "optional",
+      "impact": 2,
+      "recommended": "Preserve identifiable existing pattern; otherwise component state plus a server-state library",
+      "default": "preserve existing pattern if identifiable; otherwise recommend minimal (component state + server-state library)",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "Preserve identifiable existing pattern; otherwise component state plus a server-state library",
+          "label": "Preserve identifiable existing pattern; otherwise component state plus a server-state library"
+        },
+        {
+          "value": "Component state only",
+          "label": "Component state only"
+        },
+        {
+          "value": "Redux Toolkit",
+          "label": "Redux Toolkit"
+        },
+        {
+          "value": "Zustand",
+          "label": "Zustand"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "F10",
+      "kit": "frontend",
+      "field": "routing.preference",
+      "title": "Routing strategy",
+      "question": "Which routing library or strategy should the React frontend use?",
+      "importance": "optional",
+      "impact": 2,
+      "recommended": "Use the de-facto router for the chosen React version",
+      "default": "use the de-facto router for the chosen target framework",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": {
+        "question_id": "F1",
+        "visible_when": null,
+        "options_when": {
+          "React 18": [
+            {
+              "value": "Use the de-facto router for the chosen React version",
+              "label": "Use the de-facto router for the chosen React version"
+            },
+            {
+              "value": "Match existing routes",
+              "label": "Match existing routes"
+            },
+            {
+              "value": "No client-side router",
+              "label": "No client-side router"
+            }
+          ],
+          "React 19": [
+            {
+              "value": "Use the de-facto router for the chosen React version",
+              "label": "Use the de-facto router for the chosen React version"
+            },
+            {
+              "value": "Match existing routes",
+              "label": "Match existing routes"
+            },
+            {
+              "value": "No client-side router",
+              "label": "No client-side router"
+            }
+          ]
+        }
+      },
+      "options": [
+        {
+          "value": "Use the de-facto router for the chosen React version",
+          "label": "Use the de-facto router for the chosen React version"
+        },
+        {
+          "value": "Match existing routes",
+          "label": "Match existing routes"
+        },
+        {
+          "value": "No client-side router",
+          "label": "No client-side router"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "B1",
+      "kit": "backend",
+      "field": "target.framework",
+      "title": "Backend framework",
+      "question": "The request keeps the backend unchanged. Confirm the existing backend framework and major version to preserve (or enter a correction).",
+      "importance": "required",
+      "impact": 3,
+      "recommended": "Existing C#/.NET backend; preserve as-is (version to be confirmed from repository inspection)",
+      "default": null,
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "Existing C#/.NET backend; preserve as-is (version to be confirmed from repository inspection)",
+          "label": "Existing C#/.NET backend; preserve as-is (version to be confirmed from repository inspection)"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "B2",
+      "kit": "backend",
+      "field": "api.contract_preservation",
+      "title": "API contract policy",
+      "question": "Confirm the policy for existing API routes, payloads, and status codes.",
+      "importance": "required",
+      "impact": 4,
+      "recommended": "must preserve",
+      "default": "must preserve",
+      "prefilled": true,
+      "prefilled_value": "must preserve",
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "must preserve",
+          "label": "Must preserve all existing contracts"
+        },
+        {
+          "value": "can break with versioning",
+          "label": "Breaking changes with versioning are allowed"
+        },
+        {
+          "value": "can break",
+          "label": "Breaking changes are allowed"
+        },
+        {
+          "value": "partial: specify protected contracts",
+          "label": "Preserve only specified contracts"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "B3",
+      "kit": "backend",
+      "field": "data.migration_strategy",
+      "title": "Data migration",
+      "question": "Should any database/data migration occur as part of this frontend-only rewrite?",
+      "importance": "required",
+      "impact": 4,
+      "recommended": "no migration",
+      "default": "TBD / assess in research phase",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "no migration",
+          "label": "No migration; database remains untouched"
+        },
+        {
+          "value": "TBD / assess in research phase",
+          "label": "Defer assessment to research phase"
+        },
+        {
+          "value": "in-place",
+          "label": "In-place schema changes"
+        },
+        {
+          "value": "dual-write",
+          "label": "Dual-write to old and new schema"
+        },
+        {
+          "value": "new schema",
+          "label": "Create new schema and migrate data"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "B4",
+      "kit": "backend",
+      "field": "auth.framework",
+      "title": "Authentication",
+      "question": "Confirm how authentication and authorization should be handled during this frontend rewrite.",
+      "importance": "recommended",
+      "impact": 3,
+      "recommended": "Preserve existing auth mechanism; detect from codebase",
+      "default": "preserve existing auth mechanism; detect from codebase",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "Preserve existing auth mechanism; detect from codebase",
+          "label": "Preserve existing auth mechanism; detect from codebase"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "B5",
+      "kit": "backend",
+      "field": "nfr.sla",
+      "title": "Service-level targets",
+      "question": "What service-level targets should apply to the unchanged backend?",
+      "importance": "recommended",
+      "impact": 2,
+      "recommended": "Match current production baseline; no regression",
+      "default": "match current production baseline; no regression",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "Match current production baseline; no regression",
+          "label": "Match current production baseline; no regression"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "G1",
+      "kit": "generic",
+      "field": "success.definition",
+      "title": "Definition of done",
+      "question": "How should success be defined for this frontend rewrite?",
+      "importance": "required",
+      "impact": 4,
+      "recommended": "Feature parity with current system; preserve all existing user-facing behaviors",
+      "default": "feature parity with the current system; all existing user-facing behaviors preserved",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "Feature parity with current system; preserve all existing user-facing behaviors",
+          "label": "Feature parity with current system; preserve all existing user-facing behaviors"
+        },
+        {
+          "value": "Frontend behavior may intentionally change",
+          "label": "Frontend behavior may intentionally change"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "G2",
+      "kit": "generic",
+      "field": "out_of_scope",
+      "title": "Out-of-scope boundaries",
+      "question": "List any components or behaviors that must not be changed beyond the backend/domain preservation already specified.",
+      "importance": "recommended",
+      "impact": 3,
+      "recommended": null,
+      "default": "no explicit exclusions; agent will infer from project structure",
+      "prefilled": true,
+      "prefilled_value": "Do not change backend/domain behavior; avoid unrelated files.",
+      "answer": null,
+      "depends_on": null,
+      "type": "text",
+      "options": []
+    },
+    {
+      "id": "G3",
+      "kit": "generic",
+      "field": "existing_tests.posture",
+      "title": "Existing test policy",
+      "question": "How should existing tests be treated during and after migration?",
+      "importance": "recommended",
+      "impact": 3,
+      "recommended": "must pass",
+      "default": "must pass",
+      "prefilled": false,
+      "prefilled_value": null,
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "must pass",
+          "label": "Must pass"
+        },
+        {
+          "value": "can rewrite",
+          "label": "May be replaced with equivalent coverage"
+        },
+        {
+          "value": "ignore",
+          "label": "Ignore outdated/broken tests"
+        },
+        {
+          "value": "partial: specify suites",
+          "label": "Require selected suites only"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "G4",
+      "kit": "generic",
+      "field": "target.output_location",
+      "title": "Rewrite output location",
+      "question": "Where should the rewritten React code live?",
+      "importance": "required",
+      "impact": 4,
+      "recommended": "in-place",
+      "default": "new sibling directory: NorthWind-Sistema-Ordenes-Venta-new",
+      "prefilled": true,
+      "prefilled_value": "in-place",
+      "answer": null,
+      "depends_on": null,
+      "options": [
+        {
+          "value": "NorthWind-Sistema-Ordenes-Venta-new",
+          "label": "New sibling directory: NorthWind-Sistema-Ordenes-Venta-new"
+        },
+        {
+          "value": "in-place",
+          "label": "In the existing repository/workspace"
+        }
+      ],
+      "allow_other": true,
+      "type": "single_select"
+    },
+    {
+      "id": "G5",
+      "kit": "generic",
+      "field": "constraints.additional",
+      "title": "Additional constraints",
+      "question": "Add any requirements, exclusions, dependencies, compliance rules, or operational constraints not covered above, or leave the provided default.",
+      "importance": "optional",
+      "impact": 1,
+      "recommended": null,
+      "default": "None beyond the decisions listed in this specification.",
+      "prefilled": true,
+      "prefilled_value": "None beyond the decisions listed in this specification.",
+      "answer": null,
+      "depends_on": null,
+      "type": "text",
+      "options": []
+    }
+  ]
+}

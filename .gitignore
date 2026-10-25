@@ -13,6 +13,11 @@ obj/
 [Bb]in/
 [Oo]bj/
 
+# Archivos generados por React
+react-frontend/node_modules/
+react-frontend/dist/
+4. Frameworks And Drivers/UI/NorthWind.Sales.WebApi/wwwroot/react/
+
 # Credenciales y configuracion privada
 .env
 .env.*
