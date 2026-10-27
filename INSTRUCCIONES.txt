@@ -18,3 +18,5 @@ Si estás actualizando una carpeta vieja por superposición de archivos, ejecuta
 Eliminar-Frontend-Anterior.ps1 desde la raíz; primero haz un respaldo.
 
 La API y la base de datos no fueron modificadas.
+
+FEDORA 44: desde la raiz ejecuta  bash INICIAR_FEDORA44.sh  (ver fedora/README_FEDORA44.md).

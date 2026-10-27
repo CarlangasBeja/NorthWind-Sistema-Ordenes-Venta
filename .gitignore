@@ -34,3 +34,8 @@ Thumbs.db
 **/node_modules/
 **/dist/
 **/.astro/
+
+# Fedora 44: credenciales locales y registros de ejecución
+fedora/.env
+fedora/.env.*
+fedora/logs/

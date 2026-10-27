@@ -115,7 +115,7 @@ Las operaciones realizadas desde la aplicación permiten generar nuevos registro
 
 ## 5. Requisitos de instalación
 
-- Windows 10 o Windows 11.
+- Windows 10 o Windows 11 (para Fedora 44, ver la sección 14 y `fedora/README_FEDORA44.md`).
 - Visual Studio Community con la carga de trabajo Desarrollo de ASP.NET y web.
 - Node.js 22 LTS y npm para ejecutar Astro.
 - SDK de .NET 8.
@@ -322,3 +322,16 @@ El paquete integra el proyecto de aplicación y los scripts de las tres bases ne
 El proyecto ya no incluye los proyectos .NET del frontend antiguo ni las vistas `.razor`. Las soluciones `NorthWind.sln` y `NorthWind.Membership.sln` contienen únicamente los proyectos backend y bibliotecas compartidas necesarias. **Se ejecutan solo dos procesos: la API y Astro.**
 
 Para migrar una carpeta de trabajo anterior, lee `GUIA_MIGRACION_FRONTEND_ASTRO.md` y ejecuta `Eliminar-Frontend-Anterior.ps1` después de respaldarla. Esto elimina las carpetas obsoletas del frontend local antes de publicar cambios con Git.
+
+## 14. Ejecución en Fedora 44
+
+El proyecto también funciona en **Fedora 44 x86_64**. Como LocalDB solo existe en Windows, en Fedora se usa SQL Server 2022 en Podman, la API se ejecuta por HTTP y Astro se conecta a ella. Desde la raíz del proyecto:
+
+```bash
+bash INICIAR_FEDORA44.sh
+```
+
+- Aplicación: http://127.0.0.1:4321/login
+- Swagger: http://127.0.0.1:5254/swagger
+
+El script instala lo que falte (`dotnet-sdk-8.0`, Node.js, Podman), crea las tres bases, compila, inicia la API y Astro, y prueba el login. La guía completa y la solución de problemas están en [`fedora/README_FEDORA44.md`](fedora/README_FEDORA44.md).

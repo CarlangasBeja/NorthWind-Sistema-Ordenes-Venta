@@ -14,7 +14,8 @@ internal class NorthWindMembershipContextFactory :
                 new MembershipDBOptions()
                 {
                     ConnectionString =
-                    "Server=(localdb)\\mssqllocaldb;Database=NorthWindUsersDB"
+                    Environment.GetEnvironmentVariable("MembershipDBOptions__ConnectionString")
+                    ?? "Server=(localdb)\\mssqllocaldb;Database=NorthWindUsersDB"
                 });
         return new NorthWindMembershipContext(DbOptions);
     }

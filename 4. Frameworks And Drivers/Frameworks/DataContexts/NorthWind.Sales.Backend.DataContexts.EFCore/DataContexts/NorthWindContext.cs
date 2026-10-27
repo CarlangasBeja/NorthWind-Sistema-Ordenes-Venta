@@ -11,7 +11,8 @@ internal class NorthWindContext : DbContext
         DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(
-            "Server=(localdb)\\mssqllocaldb;Database=NorthWindDB");
+            Environment.GetEnvironmentVariable("DBOptions__ConnectionString")
+            ?? "Server=(localdb)\\mssqllocaldb;Database=NorthWindDB");
     }
 
     public DbSet<Order> Orders { get; set; }
