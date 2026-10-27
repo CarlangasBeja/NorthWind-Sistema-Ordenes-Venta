@@ -1,0 +1,12 @@
+---
+import AppLayout from '../layouts/AppLayout.astro';
+---
+<AppLayout title="Iniciar sesión" auth>
+  <div class="auth-shell">
+    <section class="auth-form"><a class="auth-mark" href="/login"><span>NW</span> NorthWind</a><div class="eyebrow">ACCESO A LA PLATAFORMA</div><h1>Bienvenido de nuevo</h1><p>Inicia sesión para administrar clientes, productos y ventas de forma segura.</p>
+      <form id="login-form"><div class="field"><label for="email">Correo electrónico <span>*</span></label><input id="email" type="email" required autocomplete="username" placeholder="nombre@ejemplo.com" /></div><div class="field"><label for="password">Contraseña <span>*</span></label><div class="row-inline"><input id="password" type="password" required autocomplete="current-password" placeholder="Ingresa tu contraseña" style="flex:1;min-width:0"/><button id="show-password" type="button" class="btn btn-ghost btn-sm">Mostrar</button></div></div><button type="submit" class="btn btn-primary" id="login-submit">Ingresar a NorthWind <span>→</span></button></form>
+      <div class="auth-bottom">¿No tienes una cuenta? <a href="/register">Crear cuenta</a></div></section>
+    <aside class="auth-aside"><div class="auth-ornament">NW</div><div><div class="eyebrow" style="color:#9beddd">UNA NUEVA FORMA DE TRABAJAR</div><h2>Todo tu negocio,<br/>más conectado.</h2><p>Un punto de venta moderno con consultas, inventario y notificaciones automáticas. Tu información sigue protegida por la API de NorthWind.</p><div class="auth-points"><div><b>✓</b> Seguridad con autenticación JWT</div><div><b>✓</b> Inventario y órdenes en tiempo real</div><div><b>✓</b> Correos automáticos a administración</div></div></div><footer>NORTHWIND COMMERCE · ASTRO EDITION</footer></aside>
+  </div>
+  <script src="../scripts/login.ts"></script>
+</AppLayout>

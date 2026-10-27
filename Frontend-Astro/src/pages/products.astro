@@ -1,0 +1,8 @@
+---
+import AppLayout from '../layouts/AppLayout.astro';
+---
+<AppLayout title="Catálogo de productos" subtitle="Explora el inventario con precios y existencias actualizadas directamente desde SQL Server." active="products">
+  <div class="page-actions"><a href="/createorder" class="btn btn-primary">＋ Crear orden de venta</a></div>
+  <section class="card"><div class="section-head"><div><h2>Inventario general</h2><p>Consulta por código o nombre, incluyendo artículos agotados.</p></div><span class="tag" id="product-count">Consultando...</span></div><form class="filters" id="product-form"><div class="field"><label for="product-field">Buscar por</label><select id="product-field"><option value="all">Código o nombre</option><option value="id">Solo código</option><option value="name">Solo nombre</option></select></div><div class="field search"><label for="product-term">Texto de búsqueda</label><input id="product-term" placeholder="Ej.: 15 o arroz" /></div><button class="btn btn-primary">Buscar productos</button><button id="product-clear" type="button" class="btn btn-ghost">Limpiar</button></form><div class="table-wrap"><table class="data-table"><thead><tr><th>Código</th><th>Nombre del producto</th><th class="end">Precio unitario</th><th class="end">Stock</th><th>Disponibilidad</th></tr></thead><tbody id="product-list"><tr><td colspan="5"><div class="loading">Cargando productos...</div></td></tr></tbody></table></div><div class="pagination" id="product-pagination"></div></section>
+  <script src="../scripts/products.ts"></script>
+</AppLayout>

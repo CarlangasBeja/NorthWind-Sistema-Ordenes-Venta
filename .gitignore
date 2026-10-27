@@ -28,3 +28,9 @@ Thumbs.db
 
 # Copia anidada del proyecto
 /NorthWind/
+
+# Astro: conservar el ejemplo público, nunca el .env real
+!.env.example
+**/node_modules/
+**/dist/
+**/.astro/

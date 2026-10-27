@@ -1,9 +1,0 @@
-@page "/user/register"
-<PageTitle>Crear cuenta | NorthWind Ventas</PageTitle>
-<ErrorBoundary @ref="ErrorBoundaryRef">
-    <ChildContent><UserRegistrationComponent ViewModel="ViewModel" /></ChildContent>
-    <ErrorContent>
-        <ExceptionDisplay Exception="context" />
-        <button class="btn btn-primary mt-3" @onclick="Recover">Reintentar</button>
-    </ErrorContent>
-</ErrorBoundary>

@@ -1,0 +1,26 @@
+---
+import AppLayout from '../layouts/AppLayout.astro';
+---
+<AppLayout title="Nueva orden de venta" subtitle="Selecciona un cliente habilitado, elige productos y confirma la compra con seguridad." active="createorder">
+  <div class="page-actions"><a class="btn btn-ghost" href="/invoices">▤ Consultar órdenes →</a></div>
+  <div class="progress-flow"><div class="progress-node" id="progress-customer"><span>1</span> Cliente y entrega</div><div class="progress-line"></div><div class="progress-node" id="progress-products"><span>2</span> Productos</div><div class="progress-line"></div><div class="progress-node" id="progress-finish"><span>3</span> Confirmación</div></div>
+  <form id="create-order-form" class="order-layout" novalidate>
+    <div class="order-main">
+      <section class="card"><div class="section-head"><div><div class="eyebrow">PASO 01</div><h2>Información del cliente</h2><p>Selecciona un cliente sin deuda pendiente y define su dirección de entrega.</p></div><span class="tag">OBLIGATORIO</span></div>
+        <div class="section-content stack"><div class="form-row"><div class="field"><label for="customer-id">Código del cliente <span>*</span></label><div class="row-inline"><input id="customer-id" readonly placeholder="Seleccionar cliente" style="flex:1;min-width:0" /><button type="button" id="choose-customer" class="btn btn-primary">⌕ Buscar</button></div></div><div class="field"><label for="customer-name">Nombre del cliente</label><input id="customer-name" readonly placeholder="Aún no se seleccionó un cliente" /></div></div>
+          <div class="form-row"><div class="field"><label for="ship-address">Dirección de entrega <span>*</span></label><input id="ship-address" maxlength="60" required placeholder="Ej.: Av. Cevallos 123 y Mera" /></div><div class="field"><label for="ship-city">Ciudad <span>*</span></label><input id="ship-city" maxlength="15" minlength="3" required placeholder="Ambato" /></div></div><div class="form-row"><div class="field"><label for="ship-country">País <span>*</span></label><input id="ship-country" maxlength="15" minlength="3" required placeholder="Ecuador" /></div><div class="field"><label for="ship-postal">Código postal (opcional)</label><input id="ship-postal" maxlength="10" placeholder="180101" /></div></div>
+        </div></section>
+      <section class="card"><div class="section-head"><div><div class="eyebrow">PASO 02</div><h2>Productos de la orden</h2><p>Precios de catálogo; cantidades dentro del inventario.</p></div><button id="add-product" type="button" class="btn btn-primary">＋ Agregar producto</button></div>
+        <div class="order-items" id="order-products" aria-live="polite">
+          <div class="order-empty"><p>Tu orden aún no tiene productos.</p><span>Selecciona productos del catálogo para comenzar.</span></div>
+        </div>
+      </section>
+    </div>
+    <aside class="order-aside"><section class="card"><div class="section-head"><div><div class="eyebrow">PASO 03</div><h2>Resumen de la venta</h2><p>Revisa todos los datos antes de guardar.</p></div></div><div class="section-content stack">
+      <div class="mini-list"><div class="row-between"><span class="helper">Cliente</span><strong id="summary-customer">Pendiente</strong></div><div class="row-between"><span class="helper">Productos distintos</span><strong id="summary-count">0</strong></div><div class="row-between"><span class="helper">Unidades totales</span><strong id="summary-units">0</strong></div></div>
+      <hr/><div class="summary-lines"><div><span>Subtotal</span><strong id="summary-subtotal">$0,00</strong></div><div><span>IVA (15 %)</span><strong id="summary-tax">$0,00</strong></div><div class="summary-total"><span>Total a pagar</span><strong id="summary-total">$0,00</strong></div></div>
+      <div class="hint-box">◈ El servidor valida nuevamente saldo pendiente, cantidades y stock antes de guardar.</div><button id="review-order" type="submit" class="btn btn-primary" disabled>✓ Revisar y guardar orden</button><button type="button" class="btn btn-ghost" id="cancel-order">Cancelar y salir</button>
+    </div></section></aside>
+  </form>
+  <script src="../scripts/createorder.ts"></script>
+</AppLayout>

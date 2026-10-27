@@ -1,6 +1,6 @@
 # NorthWind | Sistema web de órdenes de venta
 
-**Proyecto académico de gestión de ventas desarrollado con ASP.NET Core Web API, Blazor WebAssembly, .NET 8 y SQL Server LocalDB**, estructurado por capas con un enfoque de **Clean Architecture**.
+**Proyecto académico de gestión de ventas desarrollado con ASP.NET Core Web API (.NET 8), Astro 5, TypeScript y SQL Server LocalDB**, estructurado por capas con un enfoque de **Clean Architecture**.
 
 La aplicación permite consultar clientes y productos, registrar órdenes de venta, buscar órdenes emitidas y visualizar sus comprobantes en PDF. Incorpora autenticación de usuarios con ASP.NET Core Identity y JWT, validaciones de negocio y almacenamiento separado para ventas, usuarios y registros de auditoría.
 
@@ -23,13 +23,13 @@ La aplicación permite consultar clientes y productos, registrar órdenes de ven
 | Lenguaje | C# |
 | Framework | .NET 8 |
 | Backend | ASP.NET Core Web API |
-| Frontend | Blazor WebAssembly y componentes Razor |
+| Frontend | Astro 5, HTML, CSS y TypeScript |
 | Acceso a datos | Entity Framework Core |
 | Base de datos | SQL Server Express LocalDB |
 | Autenticación | ASP.NET Core Identity y JWT |
 | Validaciones | FluentValidation y reglas del dominio |
 | Documentación de API | Swagger / OpenAPI |
-| Entorno de desarrollo | Visual Studio Community, Windows 10/11 |
+| Entorno de desarrollo | Visual Studio Community y Node.js 22, Windows 10/11 |
 | Control de versiones | Git y GitHub |
 
 ## 3. Arquitectura del proyecto
@@ -42,7 +42,9 @@ NorthWind/
 ├── 2. Application Business Rules/
 ├── 3. Interface Adapters/
 ├── 4. Frameworks And Drivers/
-├── NorthWind.Membership.*
+├── NorthWind.Membership.Backend.*
+├── NorthWind.Membership.Entities/
+├── Frontend-Astro/     # interfaz web única
 ├── BaseDeDatos/
 │   ├── 00_Crear_Todo_NorthWind.sql
 │   ├── 01_NorthWindDB.sql
@@ -71,11 +73,11 @@ Implementa los casos de uso y coordina las operaciones necesarias para ejecutar 
 
 **3. Interface Adapters**
 
-Incluye controladores, presentadores, gateways y vistas Razor que permiten la comunicación entre la aplicación, los usuarios y los servicios externos.
+Incluye controladores, presentadores y gateways del backend que exponen servicios HTTP para el cliente Astro.
 
 **4. Frameworks And Drivers**
 
-Contiene los componentes vinculados con infraestructura y tecnología, como la Web API, el cliente Blazor, Entity Framework Core y la configuración de dependencias.
+Contiene los componentes de infraestructura, como la Web API, Entity Framework Core y la configuración de dependencias. Astro se encuentra en `Frontend-Astro/`, separado de la solución .NET.
 
 ## 4. Bases de datos
 
@@ -115,6 +117,7 @@ Las operaciones realizadas desde la aplicación permiten generar nuevos registro
 
 - Windows 10 o Windows 11.
 - Visual Studio Community con la carga de trabajo Desarrollo de ASP.NET y web.
+- Node.js 22 LTS y npm para ejecutar Astro.
 - SDK de .NET 8.
 - SQL Server Express LocalDB.
 - Git para clonar o publicar el repositorio.
@@ -179,12 +182,16 @@ https://localhost:7154/swagger
 Abrir otra terminal en la misma carpeta y ejecutar:
 
 ```powershell
-dotnet run --project '.\4. Frameworks And Drivers\UIs\NorthWind.Sales.BlazorClient\NorthWind.Sales.BlazorClient.csproj' --launch-profile https
+cd .\Frontend-Astro
+npm install
+npm run dev
 ```
 
-Aplicación:
+Aplicación Astro:
 
-https://localhost:7254
+http://localhost:4321/login
+
+Para comprobar la compilación: `npm run build` desde `Frontend-Astro/`.
 
 Si el sistema operativo no confía en el certificado HTTPS local, ejecutar:
 
@@ -270,7 +277,7 @@ Antes de publicar la aplicación en Internet, deben revisarse credenciales, perm
 | `dotnet` no se reconoce | Instalar el SDK .NET 8 y abrir una terminal nueva. |
 | Error de conexión SQL | Confirmar que LocalDB esté instalado, que el servidor sea `(localdb)\MSSQLLocalDB` y que las tres bases existan. |
 | Error al validar o firmar un JWT | Ejecutar `Configurar-Desarrollo.ps1` y reiniciar la API en modo `Development`. |
-| El cliente no se conecta con el backend | Verificar que la API esté activa en `https://localhost:7154` y que ese valor coincida con `wwwroot/appsettings.json` del cliente. |
+| El cliente no se conecta con el backend | Verificar la API en `https://localhost:7154`, abrir `http://localhost:4321` y revisar `PUBLIC_API_URL` del cliente Astro (si se configuró en `.env`). |
 | Error de certificado HTTPS | Ejecutar `dotnet dev-certs https --trust`. |
 | Error 401 al consultar ventas | Iniciar sesión y enviar un token JWT válido al consumir endpoints protegidos. |
 | Conflicto al hacer `git push` | Comprobar `git remote -v` e integrar los cambios remotos antes de volver a subir; evitar `--force`. |
@@ -294,13 +301,13 @@ git push -u origin main
 
 Si `origin` ya existe, comprobarlo con `git remote -v` y actualizar su URL mediante `git remote set-url origin URL`; no añadir el remoto dos veces.
 
-El `.gitignore` excluye archivos temporales de Visual Studio (`.vs`), resultados de compilación (`bin`, `obj`) y otros archivos que no deben versionarse.
+El `.gitignore` excluye archivos temporales de Visual Studio (`.vs`), resultados de compilación (`bin`, `obj`), y artefactos Astro (`node_modules`, `dist`, `.astro`).
 
 Las bases de datos se publican mediante sus scripts `.sql`, no como archivos físicos de LocalDB.
 
 ## 12. Alcance y estado del proyecto
 
-Este repositorio tiene fines académicos y de aprendizaje, centrados en la aplicación de C#, ASP.NET Core, Blazor, Clean Architecture, persistencia de datos y servicios web.
+Este repositorio tiene fines académicos y de aprendizaje, centrados en la aplicación de C#, ASP.NET Core, Astro, TypeScript, Clean Architecture, persistencia de datos y servicios web.
 
 El paquete integra el proyecto de aplicación y los scripts de las tres bases necesarios para preparar un entorno local.
 
@@ -309,3 +316,9 @@ El paquete integra el proyecto de aplicación y los scripts de las tres bases ne
 ---
 
 **NorthWind — Proyecto académico de Ingeniería de Software.**
+
+## 13. Interfaz única: Astro
+
+El proyecto ya no incluye los proyectos .NET del frontend antiguo ni las vistas `.razor`. Las soluciones `NorthWind.sln` y `NorthWind.Membership.sln` contienen únicamente los proyectos backend y bibliotecas compartidas necesarias. **Se ejecutan solo dos procesos: la API y Astro.**
+
+Para migrar una carpeta de trabajo anterior, lee `GUIA_MIGRACION_FRONTEND_ASTRO.md` y ejecuta `Eliminar-Frontend-Anterior.ps1` después de respaldarla. Esto elimina las carpetas obsoletas del frontend local antes de publicar cambios con Git.

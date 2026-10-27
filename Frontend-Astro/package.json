@@ -1,0 +1,9 @@
+{
+  "name": "northwind-frontend-astro",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {"dev":"astro dev --host 127.0.0.1", "build":"astro build", "preview":"astro preview", "check":"astro check"},
+  "dependencies": {"astro":"^5.0.0"},
+  "devDependencies": {"typescript":"^5.0.0", "@astrojs/check":"^0.9.4"}
+}

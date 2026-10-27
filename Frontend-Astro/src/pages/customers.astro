@@ -1,0 +1,11 @@
+---
+import AppLayout from '../layouts/AppLayout.astro';
+---
+<AppLayout title="Gestión de clientes" subtitle="Consulta clientes, registra contactos y administra saldos pendientes sin salir del catálogo." active="customers">
+  <div class="page-actions"><button class="btn btn-primary" id="add-customer">＋ Agregar cliente</button><a class="btn btn-ghost" href="/createorder">Ir a ventas →</a></div>
+  <section class="card"><div class="section-head"><div><h2>Directorio de clientes</h2><p>Busca por código o nombre y revisa el estado de cada cliente.</p></div><span class="tag" id="customer-count">Consultando...</span></div>
+  <form class="filters" id="customer-search-form"><div class="field"><label for="customer-field">Buscar por</label><select id="customer-field"><option value="all">Código o nombre</option><option value="code">Solo código</option><option value="name">Solo nombre</option></select></div><div class="field search"><label for="customer-term">Texto de búsqueda</label><input id="customer-term" placeholder="Ej.: EC001 o María Fernanda" /></div><button class="btn btn-primary">Buscar clientes</button><button type="button" id="customer-clear" class="btn btn-ghost">Limpiar</button></form>
+  <div class="table-wrap"><table class="data-table"><thead><tr><th>Código</th><th>Nombre del cliente</th><th class="end">Saldo pendiente</th><th>Estado</th><th class="end">Gestión</th></tr></thead><tbody id="customer-list"><tr><td colspan="5"><div class="loading">Cargando clientes...</div></td></tr></tbody></table></div><div class="pagination" id="customer-pagination"></div></section>
+  <div class="hint-box" style="margin-top:19px"><strong>Regla de negocio:</strong> un cliente con saldo pendiente mayor que $0,00 no puede realizar nuevas órdenes. Esta validación también se ejecuta en la API.</div>
+  <script src="../scripts/customers.ts"></script>
+</AppLayout>

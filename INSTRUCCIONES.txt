@@ -1,27 +1,20 @@
-NORTHWIND - PARCHE API + FRONTEND EN ESPAÑOL
+NORTHWIND — SOLO ASTRO (INTERFAZ) + ASP.NET CORE (API)
 
-1. Detenga la API y Blazor (Ctrl+C en ambas terminales).
-2. Extraiga este ZIP sobre:
-   C:\Users\ASUS VIVOBOOK\Desktop\NorthWind
-3. Elija "Reemplazar los archivos en el destino".
-4. Compile:
-   dotnet build .\NorthWind.sln
-5. Inicie la API:
+1. Restaura o verifica las bases de datos en (localdb)\MSSQLLocalDB.
+2. Configura JWT con Configurar-Desarrollo.ps1 si aún no existe en User Secrets.
+3. Para envíos de correo reales configura Resend una vez con Configurar-Resend.ps1 (nunca coloques API Keys en el frontend).
+4. Abre PowerShell en la raíz NorthWind. Inicia API:
    dotnet run --project ".\4. Frameworks And Drivers\UI\NorthWind.Sales.WebApi\NorthWind.Sales.WebApi.csproj"
-6. Confirme que Swagger abre en:
-   https://localhost:7154/swagger
-7. Inicie Blazor en otra terminal:
-   dotnet run --project ".\4. Frameworks And Drivers\UIs\NorthWind.Sales.BlazorClient\NorthWind.Sales.BlazorClient.csproj"
-8. Abra:
-   https://localhost:7254
-9. El parche invalida el token anterior a propósito. Inicie sesión nuevamente.
-10. Pruebe búsqueda de clientes, productos y facturas.
+5. Abre otra PowerShell desde NorthWind e inicia Astro:
+   cd .\Frontend-Astro
+   npm install
+   npm run dev
+6. Visita http://localhost:4321/login
+7. Para comprobar compilación: npm run build (desde Frontend-Astro).
 
-Cambios principales:
-- Frontend y mensajes de validación en español.
-- Token de sesión versionado para evitar tokens viejos rechazados por la API.
-- Eliminación automática del token cuando la API responde 401.
-- Validación de expiración del JWT en Blazor.
-- Orden de middleware de autenticación/autorización corregido antes de mapear endpoints.
-- Mensajes diferenciados para sesión vencida, falta de permisos o API no disponible.
-- Factura PDF en español.
+RUTAS: /login  /register  /  /customers  /products  /createorder  /invoices
+
+Si estás actualizando una carpeta vieja por superposición de archivos, ejecuta
+Eliminar-Frontend-Anterior.ps1 desde la raíz; primero haz un respaldo.
+
+La API y la base de datos no fueron modificadas.

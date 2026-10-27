@@ -1,0 +1,11 @@
+---
+import AppLayout from '../layouts/AppLayout.astro';
+---
+<AppLayout title="Órdenes y facturas" subtitle="Busca las ventas registradas, revisa sus detalles y descarga comprobantes PDF." active="invoices">
+  <div class="page-actions"><a href="/createorder" class="btn btn-primary">＋ Nueva orden</a></div>
+  <section class="card"><div class="section-head"><div><h2>Historial comercial</h2><p>Filtros inteligentes para localizar órdenes por número o cliente.</p></div><span class="tag" id="invoice-count">Consultando...</span></div>
+  <form class="filters" id="invoice-form"><div class="field"><label for="invoice-field">Buscar por</label><select id="invoice-field"><option value="all">Todos los campos</option><option value="invoice">N.º de orden</option><option value="customercode">Código cliente</option><option value="customername">Nombre cliente</option></select></div><div class="field search"><label for="invoice-term">Texto de búsqueda</label><input id="invoice-term" placeholder="Ej.: INV-001006 o EC001" /></div><button class="btn btn-primary">Buscar orden</button><button type="button" id="invoice-clear" class="btn btn-ghost">Restablecer</button></form>
+  <div class="table-wrap"><table class="data-table"><thead><tr><th>Orden</th><th>Fecha</th><th>Cliente</th><th class="end">Subtotal</th><th class="end">IVA</th><th class="end">Total</th><th class="end">Acciones</th></tr></thead><tbody id="invoice-list"><tr><td colspan="7"><div class="loading">Consultando órdenes...</div></td></tr></tbody></table></div><div class="pagination" id="invoice-pagination"></div></section>
+  <div class="hint-box" style="margin-top:20px">Los comprobantes PDF los genera tu backend ASP.NET Core. La descarga conserva la autenticación JWT y los datos reales de la orden.</div>
+  <script src="../scripts/invoices.ts"></script>
+</AppLayout>

@@ -1,9 +1,0 @@
-@attribute [Route(RouteTemplate)]
-<PageTitle>Iniciar sesión | NorthWind Ventas</PageTitle>
-<ErrorBoundary @ref="ErrorBoundaryRef">
-    <ChildContent><UserLoginComponent ViewModel="ViewModel" /></ChildContent>
-    <ErrorContent>
-        <ExceptionDisplay Exception="context" />
-        <button class="btn btn-primary mt-3" @onclick="Recover">Reintentar</button>
-    </ErrorContent>
-</ErrorBoundary>
